@@ -1,5 +1,6 @@
 package com.example.pft
 
+import UserResponse
 import android.annotation.SuppressLint
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
@@ -11,10 +12,17 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import com.google.gson.Gson
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         buttonLogin.setOnClickListener {
 
 
-            datosLogin()
+//            sendLoginRequest()
 
             //metodo para ocultar los elementos del login
             ocultarLogin()
@@ -89,14 +97,51 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun datosLogin() {
-        plainTextRegistroNombre = findViewById<EditText>(R.id.plainTextRegistroNombre)
-        plainTextRegistroContrasenia = findViewById<EditText>(R.id.plainTextContrasenia)
+    private fun sendLoginRequest() {
+        val client = OkHttpClient()
 
-        var nombre = plainTextRegistroNombre.text.toString()
-        var password = plainTextRegistroContrasenia.text.toString()
+        val jsonMediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = """
+    {
+        "username": "admin",
+        "password": "adin"
+    }
+""".trimIndent().toRequestBody(jsonMediaType)
+        val serverUrl = "https://ae39-2800-ac-20-229a-3c33-31eb-6970-c112.ngrok.io"
 
-        println(nombre + password)
+        val request = Request.Builder()
+            .url("$serverUrl/PFT/api/auth/login")
+            .post(requestBody)
+            .build()
 
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                // Handle network or request failure
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body?.string()
+                    val gson = Gson()
+                    val userResponse = gson.fromJson(responseBody, UserResponse::class.java)
+
+                    println(userResponse)
+                } else {
+                    val errorCode = response.code
+
+                    when (errorCode) {
+                        401 -> {
+                            "contra incorrecta"
+                        }
+                        404 -> {
+                            "el usuario no existe"
+                        }
+                        500 -> {
+                            "error en el servidor"
+                        }
+                    }
+                }
+            }
+        })
     }
 }

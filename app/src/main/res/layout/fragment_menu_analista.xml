@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.98">
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageViewFacebookUtec"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
@@ -33,7 +33,7 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imageViewXUtec"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginRight="10dp"
@@ -46,7 +46,7 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/imageViewIntagramUtec"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/instagramlogoutec" />
