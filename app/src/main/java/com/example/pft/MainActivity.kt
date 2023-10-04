@@ -1,7 +1,10 @@
 package com.example.pft
 
+import ReadConfig
 import UserResponse
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,9 +23,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import java.io.BufferedReader
 import java.io.IOException
-import java.io.InputStreamReader
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,8 +41,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         buttonlogin()
+        noTienesCuenta()
 //        olividasteLaConstrasenia()
 
+    }
+
+    fun noTienesCuenta() {
+        val noTienesCuentaButton = findViewById<TextView>(R.id.textViewNoTienesCuenta)
+
+        noTienesCuentaButton.setOnClickListener {
+            val readConfig = ReadConfig()
+            val serverUrl = readConfig.getServerUrl()
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl/PFT/login.xhtml"))
+            intent.resolveActivity(packageManager)
+            startActivity(intent)
+        }
     }
 
     fun ocultarLogin() {
@@ -57,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         buttonLogin.setOnClickListener {
 
 
-//            sendLoginRequest()
+            sendLoginRequest()
 
             //metodo para ocultar los elementos del login
             ocultarLogin()
@@ -100,14 +114,25 @@ class MainActivity : AppCompatActivity() {
     private fun sendLoginRequest() {
         val client = OkHttpClient()
 
+        // text fields
+        val editTextNombreUsuario = findViewById<EditText>(R.id.plainTextRegistroNombre)
+        val editTextContrasenia = findViewById<EditText>(R.id.plainTextContrasenia)
+
+        val nombreUsuario = editTextNombreUsuario.text.toString()
+        val contrasenia = editTextContrasenia.text.toString()
+
         val jsonMediaType = "application/json; charset=utf-8".toMediaType()
         val requestBody = """
     {
-        "username": "admin",
-        "password": "adin"
+        "username": "$nombreUsuario",
+        "password": "$contrasenia"
     }
 """.trimIndent().toRequestBody(jsonMediaType)
-        val serverUrl = "https://ae39-2800-ac-20-229a-3c33-31eb-6970-c112.ngrok.io"
+
+        println("Nombre usuario: $nombreUsuario, contrasenia: $contrasenia")
+
+        val readConfig = ReadConfig()
+        val serverUrl = readConfig.getServerUrl()
 
         val request = Request.Builder()
             .url("$serverUrl/PFT/api/auth/login")
