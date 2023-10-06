@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.cardview.widget.CardView
 import com.google.gson.Gson
 import okhttp3.Call
@@ -23,7 +24,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import java.io.BufferedReader
 import java.io.IOException
+import java.io.InputStreamReader
+import java.io.PrintStream
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         buttonlogin()
         noTienesCuenta()
+        volver()
 //        olividasteLaConstrasenia()
 
     }
@@ -52,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         noTienesCuentaButton.setOnClickListener {
             val readConfig = ReadConfig()
             val serverUrl = readConfig.getServerUrl()
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl/PFT/login.xhtml"))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl/PFT/login.jsf"))
             intent.resolveActivity(packageManager)
             startActivity(intent)
         }
@@ -70,23 +75,7 @@ class MainActivity : AppCompatActivity() {
 
         buttonLogin.setOnClickListener {
 
-
-            sendLoginRequest()
-
-            //metodo para ocultar los elementos del login
-            ocultarLogin()
-            val analistaMenu =
-                findViewById<RelativeLayout>(R.id.menuAnalista)// Reemplaza con el ID de tu diseño de inicio de sesión
-            // Crear una instancia del fragmento que deseas mostrar
-            val fragmentMenuAnalista = FragmentMenuAnalista()
-            // Obtener el FragmentManager
-            val fragmentManager = supportFragmentManager
-            // Comenzar una transacción de fragmento
-            val transaction = fragmentManager.beginTransaction()
-            // Reemplazar el contenido del contenedor con el fragmento
-            transaction.replace(R.id.menuLogin, fragmentMenuAnalista)
-            // Hacer commit para aplicar la transacción
-            transaction.addToBackStack(null).commit()
+            cargarMenuEstudiante()
         }
     }
 
@@ -158,9 +147,11 @@ class MainActivity : AppCompatActivity() {
                         401 -> {
                             "contra incorrecta"
                         }
+
                         404 -> {
                             "el usuario no existe"
                         }
+
                         500 -> {
                             "error en el servidor"
                         }
@@ -168,5 +159,33 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    fun cargarMenuEstudiante() {
+        ocultarLogin()
+        val fragmentMenuEstudiante = FragmentMenuEstudiante()
+        val fragmentManager = supportFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.menuLogin, fragmentMenuEstudiante)
+        transaction.addToBackStack(null).commit()
+    }
+
+    fun cargarMenuAnalista() {
+        ocultarLogin()
+        val fragmentMenuAnalista = FragmentMenuAnalista()
+        val fragmentManager = supportFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.menuLogin, fragmentMenuAnalista)
+        transaction.addToBackStack(null).commit()
+    }
+
+    fun volver() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+
+                println("no vas a poder volver")
+
+            }
+        }
     }
 }

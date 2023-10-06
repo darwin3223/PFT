@@ -5,6 +5,6 @@ data class Configuracion(val serverUrl: String)
 
 class ReadConfig {
     fun getServerUrl(): String {
-        return "https://locahost:8080"
+        return "https://9814-167-108-254-247.ngrok-free.app"
     }
 }
