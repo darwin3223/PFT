@@ -74,8 +74,15 @@ class MainActivity : AppCompatActivity() {
         buttonLogin = findViewById<Button>(R.id.buttonLogin)
 
         buttonLogin.setOnClickListener {
+            val editTextNombreUsuario = findViewById<EditText>(R.id.plainTextRegistroNombre)
 
-            cargarMenuEstudiante()
+            if (editTextNombreUsuario.text.toString().equals("analista")) {
+                cargarMenuAnalista()
+            } else {
+                cargarMenuEstudiante()
+            }
+
+
         }
     }
 
@@ -123,10 +130,8 @@ class MainActivity : AppCompatActivity() {
         val readConfig = ReadConfig()
         val serverUrl = readConfig.getServerUrl()
 
-        val request = Request.Builder()
-            .url("$serverUrl/PFT/api/auth/login")
-            .post(requestBody)
-            .build()
+        val request =
+            Request.Builder().url("$serverUrl/PFT/api/auth/login").post(requestBody).build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {

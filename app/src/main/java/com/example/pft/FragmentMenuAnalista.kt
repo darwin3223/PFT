@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.exception.MyException
 
 class FragmentMenuAnalista : Fragment() {
@@ -33,7 +34,8 @@ class FragmentMenuAnalista : Fragment() {
     }
 
     fun atenderReclamos() {
-        val buttonAtenderReclamos = requireActivity().findViewById<Button>(R.id.buttonAtenderReclamos)
+        val buttonAtenderReclamos =
+            requireActivity().findViewById<Button>(R.id.buttonAtenderReclamos)
         buttonAtenderReclamos.setOnClickListener {
             val atenderReclamo =
                 requireActivity().findViewById<RelativeLayout>(R.id.fragmentoAtenderReclamos)// Reemplaza con el ID de tu diseño de inicio de sesión
@@ -52,7 +54,8 @@ class FragmentMenuAnalista : Fragment() {
 
     fun facebookUtec() {
         try {
-            val facebookUtec = requireActivity().findViewById<ImageView>(R.id.imageViewFacebookUtecAnalista)
+            val facebookUtec =
+                requireActivity().findViewById<ImageView>(R.id.imageViewFacebookUtecAnalista)
 
             facebookUtec.setOnClickListener {
                 val urlRedSocial = "https://www.facebook.com/utecuy/?locale=es_LA"
@@ -66,6 +69,7 @@ class FragmentMenuAnalista : Fragment() {
             Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show()
         }
     }
+
     fun instagramUtec() {
         try {
             val instagramUtec =
@@ -85,6 +89,7 @@ class FragmentMenuAnalista : Fragment() {
         }
 
     }
+
     fun xUtec() {
         try {
             val xUtec = requireActivity().findViewById<ImageView>(R.id.imageViewXUtecAnalista)
@@ -102,20 +107,37 @@ class FragmentMenuAnalista : Fragment() {
             Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show()
         }
     }
+
     fun volver() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                mostrarFrameCerrarSesion()
 
-                val intent = Intent(requireContext(), MainActivity::class.java)
-                Intent.FLAG_ACTIVITY_CLEAR_TOP
-                startActivity(intent)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-
-        // Habilitar o deshabilitar el callback según sea necesario
         callback.isEnabled =
-            true // Opcional: puedes habilitar o deshabilitar el callback según tus necesidades.
+            true
+    }
+
+    fun mostrarFrameCerrarSesion() {
+        val miniFrameCloseAnali =
+            requireActivity().findViewById<ConstraintLayout>(R.id.miniFrameCloseAnali)
+        miniFrameCloseAnali.visibility = View.VISIBLE
+
+        val buttonAceptarMiniFrameAnali =
+            requireActivity().findViewById<Button>(R.id.buttonAceptarMiniFrameAnali)
+        val buttonCancelarMiniFrameAnali =
+            requireActivity().findViewById<Button>(R.id.buttonCancelarMiniFrameAnali)
+
+        buttonAceptarMiniFrameAnali.setOnClickListener {
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+        }
+        buttonCancelarMiniFrameAnali.setOnClickListener {
+            miniFrameCloseAnali.visibility = View.GONE
+        }
     }
 }
 
