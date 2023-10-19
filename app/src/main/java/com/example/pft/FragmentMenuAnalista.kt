@@ -28,6 +28,7 @@ class FragmentMenuAnalista : Fragment() {
 
         atenderReclamos()
         volver()
+        cerrarSesion()
         facebookUtec()
         instagramUtec()
         xUtec()
@@ -137,6 +138,33 @@ class FragmentMenuAnalista : Fragment() {
         }
         buttonCancelarMiniFrameAnali.setOnClickListener {
             miniFrameCloseAnali.visibility = View.GONE
+        }
+    }
+
+    fun cerrarSesion() {
+        val cerrarSesion = requireActivity().findViewById<ImageView>(R.id.cerrarSesionEstudiante)
+        cerrarSesion.setOnClickListener {
+            mostrarFrameCerrarSesion()
+        }
+        fun mostrarFrameCerrarSesion() {
+            val miniFrameCloseEstu =
+                requireActivity().findViewById<ConstraintLayout>(R.id.miniFrameCloseAnali)
+            miniFrameCloseEstu.visibility = View.VISIBLE
+
+            val buttonAceptarMiniFrameEstu =
+                requireActivity().findViewById<Button>(R.id.buttonAceptarMiniFrameAnali)
+            val buttonCancelarMiniFrameEstu =
+                requireActivity().findViewById<Button>(R.id.buttonCancelarMiniFrameAnali)
+
+            buttonAceptarMiniFrameEstu.setOnClickListener {
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(intent)
+            }
+
+            buttonCancelarMiniFrameEstu.setOnClickListener {
+                miniFrameCloseEstu.visibility = View.GONE
+            }
         }
     }
 }

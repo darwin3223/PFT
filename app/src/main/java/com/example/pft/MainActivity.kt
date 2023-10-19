@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         noTienesCuentaButton.setOnClickListener {
             val readConfig = ReadConfig()
             val serverUrl = readConfig.getServerUrl()
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl/PFT/login.jsf"))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl/login"))
             intent.resolveActivity(packageManager)
             startActivity(intent)
         }
@@ -74,14 +74,7 @@ class MainActivity : AppCompatActivity() {
         buttonLogin = findViewById<Button>(R.id.buttonLogin)
 
         buttonLogin.setOnClickListener {
-            val editTextNombreUsuario = findViewById<EditText>(R.id.plainTextRegistroNombre)
-
-            if (editTextNombreUsuario.text.toString().equals("analista")) {
-                cargarMenuAnalista()
-            } else {
-                cargarMenuEstudiante()
-            }
-
+            sendLoginRequest()
 
         }
     }
