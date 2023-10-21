@@ -1,11 +1,10 @@
 package com.example.pft
 
 import ReadConfig
-import UserResponse
+import com.example.pft.models.UserResponse
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -16,18 +15,12 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.cardview.widget.CardView
+import com.example.pft.models.ApiClient
+import com.example.pft.models.UserLoginRequest
 import com.google.gson.Gson
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
-import java.io.BufferedReader
+import retrofit2.Call
+import retrofit2.Response
 import java.io.IOException
-import java.io.InputStreamReader
-import java.io.PrintStream
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         noTienesCuentaButton.setOnClickListener {
             val readConfig = ReadConfig()
             val serverUrl = readConfig.getServerUrl()
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl/login"))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl/registro"))
             intent.resolveActivity(packageManager)
             startActivity(intent)
         }
@@ -101,8 +94,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendLoginRequest() {
-        val client = OkHttpClient()
-
         // text fields
         val editTextNombreUsuario = findViewById<EditText>(R.id.plainTextRegistroNombre)
         val editTextContrasenia = findViewById<EditText>(R.id.plainTextContrasenia)
@@ -110,53 +101,31 @@ class MainActivity : AppCompatActivity() {
         val nombreUsuario = editTextNombreUsuario.text.toString()
         val contrasenia = editTextContrasenia.text.toString()
 
-        val jsonMediaType = "application/json; charset=utf-8".toMediaType()
-        val requestBody = """
-    {
-        "username": "$nombreUsuario",
-        "password": "$contrasenia"
-    }
-""".trimIndent().toRequestBody(jsonMediaType)
-
         println("Nombre usuario: $nombreUsuario, contrasenia: $contrasenia")
 
-        val readConfig = ReadConfig()
-        val serverUrl = readConfig.getServerUrl()
+        val apiService = ApiClient.apiService
 
-        val request =
-            Request.Builder().url("$serverUrl/PFT/api/auth/login").post(requestBody).build()
+        val userLogin = UserLoginRequest(username = nombreUsuario, password = contrasenia)
+        val call = apiService.loginUsuario(userLogin)
 
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                // Handle network or request failure
-            }
-
-            override fun onResponse(call: Call, response: Response) {
+        call.enqueue(object : retrofit2.Callback<UserResponse>{
+            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 if (response.isSuccessful) {
-                    val responseBody = response.body?.string()
-                    val gson = Gson()
-                    val userResponse = gson.fromJson(responseBody, UserResponse::class.java)
 
-                    println(userResponse)
-                } else {
-                    val errorCode = response.code
-
-                    when (errorCode) {
-                        401 -> {
-                            "contra incorrecta"
-                        }
-
-                        404 -> {
-                            "el usuario no existe"
-                        }
-
-                        500 -> {
-                            "error en el servidor"
-                        }
+                    when (response.body()?.usuario?.tipoUsuario) {
+                        "ANALISTA" -> cargarMenuAnalista()
+                        "ESTUDIANTE" -> cargarMenuEstudiante()
                     }
+
+                } else {
+                    println(response)
                 }
             }
+
+            override fun onFailure(call: retrofit2.Call<UserResponse>, t: Throwable) {
+            }
         })
+
     }
 
     fun cargarMenuEstudiante() {

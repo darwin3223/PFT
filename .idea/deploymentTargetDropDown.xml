@@ -7,11 +7,22 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\Darwin-PC\.android\avd\Pixel_7_Pro_API_30.avd" />
+            <value value="$USER_HOME$/.android/avd/Pixel_7_Pro_API_UpsideDownCakePrivacySandbox.avd" />
           </Key>
         </deviceKey>
       </Target>
     </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2023-10-18T15:15:51.076505600Z" />
+    <timeTargetWasSelectedWithDropDown value="2023-10-20T22:10:39.082914Z" />
+    <targetsSelectedWithDialog>
+      <Target>
+        <type value="QUICK_BOOT_TARGET" />
+        <deviceKey>
+          <Key>
+            <type value="VIRTUAL_DEVICE_PATH" />
+            <value value="$USER_HOME$/.android/avd/Pixel_7_Pro_API_UpsideDownCakePrivacySandbox.avd" />
+          </Key>
+        </deviceKey>
+      </Target>
+    </targetsSelectedWithDialog>
   </component>
 </project>
