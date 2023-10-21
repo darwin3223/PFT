@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
     private val config = ReadConfig()
-    private val BASE_URL = "${config.getServerUrl()}api/"
+    private val BASE_URL = "${config.getServerUrl()}/api/"
 
 
     private val retrofit = Retrofit.Builder()
