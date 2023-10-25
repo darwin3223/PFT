@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         buttonlogin()
         noTienesCuenta()
         volver()
+        ocultarMensajeError()
 //        olividasteLaConstrasenia()
 
     }
@@ -167,6 +168,23 @@ class MainActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.textViewError)
         mensajeError.visibility = View.VISIBLE
         mensajeError.text = error
+
+    }
+
+   fun ocultarMensajeError(){
+       val editTextNombreUsuario = findViewById<EditText>(R.id.plainTextRegistroNombre)
+       val editTextContrasenia = findViewById<EditText>(R.id.plainTextContrasenia)
+       editTextNombreUsuario.setOnClickListener{
+           val mensajeError =
+               findViewById<TextView>(R.id.textViewError)
+           mensajeError.visibility = View.GONE
+       }
+       editTextContrasenia.setOnClickListener{
+           val mensajeError =
+               findViewById<TextView>(R.id.textViewError)
+           mensajeError.visibility = View.GONE
+       }
+
 
     }
 

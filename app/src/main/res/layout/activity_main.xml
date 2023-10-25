@@ -44,10 +44,10 @@
 
         <TextView
             android:id="@+id/textViewError"
-            android:layout_width="177dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="175dp"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginTop="200dp"
+            android:textAlignment="center"
             android:textColor="#FF0000"
             android:textSize="16sp"
             android:textStyle="bold"
