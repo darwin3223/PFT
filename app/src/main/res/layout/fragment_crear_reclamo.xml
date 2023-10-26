@@ -57,25 +57,26 @@
         android:layout_width="340dp"
         android:layout_height="50dp"
         android:layout_marginTop="56dp"
+        android:backgroundTint="@color/utecColor"
         android:ems="10"
         android:inputType="text"
         android:text="Name"
-        android:backgroundTint="@color/utecColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutCrearReclamoTop"
-        app:layout_constraintVertical_bias="0.050000012" />
+        app:layout_constraintVertical_bias="0.06999999" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/spinnerEvento"
         android:layout_width="340dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toTopOf="@+id/buttonCrearReclamoReclamo"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText"
-        app:layout_constraintVertical_bias="0.75" />
+        app:layout_constraintVertical_bias="0.926" />
 
     <TextView
         android:id="@+id/textViewReclamoTitulo"
@@ -116,17 +117,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="-270dp"
         android:text="Seleccione el evento"
         android:textColor="@color/utecColor"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinner"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerEvento"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintHorizontal_bias="0.12"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
+        app:layout_constraintVertical_bias="0.539" />
 
     <EditText
         android:id="@+id/editTextTextMultiLine"
@@ -136,10 +135,10 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/textViewReclamoEvento"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewReclamoDetalle"
-        app:layout_constraintVertical_bias="0.060000002" />
+        app:layout_constraintTop_toTopOf="@+id/layoutCrearReclamoTop"
+        app:layout_constraintVertical_bias="0.38" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
