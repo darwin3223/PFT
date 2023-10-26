@@ -112,6 +112,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 if (response.isSuccessful) {
 
+
                     when (response.body()?.usuario?.tipoUsuario) {
                         "ANALISTA" -> cargarMenuAnalista()
                         "ESTUDIANTE" -> cargarMenuEstudiante()
@@ -123,6 +124,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: retrofit2.Call<UserResponse>, t: Throwable) {
+                println(t.message)
             }
         })
 
