@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity() {
         transaction.replace(R.id.menuLogin, fragmentMenuEstudiante)
         transaction.addToBackStack(null).commit()
     }
-
+//Comentario
     fun cargarMenuAnalista() {
         ocultarLogin()
         val fragmentMenuAnalista = FragmentMenuAnalista()
@@ -150,6 +150,7 @@ class MainActivity : AppCompatActivity() {
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.menuLogin, fragmentMenuAnalista)
         transaction.addToBackStack(null).commit()
+
     }
 
     fun volver() {
