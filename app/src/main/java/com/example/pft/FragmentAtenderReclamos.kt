@@ -12,21 +12,20 @@ class FragmentAtenderReclamos : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        (activity as MainActivity).enableBackButton()
         return inflater.inflate(R.layout.fragment_atender_reclamos, container, false)
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         volver()
     }
 
-    fun volver() {
-        val botonVolver = requireActivity().findViewById<ImageView>(R.id.imageArrowBackVerReclamo)
-        botonVolver.setOnClickListener {
+    fun volver(){
+        val botonVolverReclamo = requireActivity().findViewById<ImageView>(R.id.imageArrowBackAtenderReclamo)
+        botonVolverReclamo.setOnClickListener {
             requireActivity().onBackPressed()
         }
 
     }
+
 }

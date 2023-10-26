@@ -14,14 +14,8 @@ class FragmentCrearReclamo : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_crear_reclamo, container, false)
-
-
-
-        return view
-
-
+        (activity as MainActivity).enableBackButton()
+        return inflater.inflate(R.layout.fragment_crear_reclamo, container, false)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,7 +24,6 @@ class FragmentCrearReclamo : Fragment() {
   fun volver(){
       val botonVolver = requireActivity().findViewById<ImageView>(R.id.imageArrowBackCrearReclamo)
       botonVolver.setOnClickListener {
-          // Crear un Intent para volver al menú principal o la actividad deseada
           requireActivity().onBackPressed()
 
       }

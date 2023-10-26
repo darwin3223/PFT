@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var imageViewLogoUtec: ImageView
     private lateinit var plainTextRegistroNombre: EditText
     private lateinit var plainTextRegistroContrasenia: EditText
+    private var backButtonEnabled = false
 
     @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         buttonlogin()
         noTienesCuenta()
-        volver()
         ocultarMensajeError()
 //        olividasteLaConstrasenia()
 
@@ -53,6 +53,17 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl/registro"))
             intent.resolveActivity(packageManager)
             startActivity(intent)
+        }
+    }
+
+    fun olvidasteLaContrasenia() {
+        val olvidastelaContraseniaButton = findViewById<TextView>(R.id.textViewOlvidasteContrasenia)
+
+        olvidastelaContraseniaButton.setOnClickListener {
+            val readConfig = ReadConfig()
+            val serverUrl = readConfig.getServerUrl()
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl/INSERTARURL"))
+            intent.resolveActivity(packageManager)
         }
     }
 
@@ -73,26 +84,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("WrongViewCast")
-    fun olividasteLaConstrasenia() {
-        textViewOlvidasteContrasenia = findViewById<TextView>(R.id.textViewOlvidasteContrasenia)
-        textViewOlvidasteContrasenia.setOnClickListener {
-            ocultarLogin()
-            val analistaMenu =
-                findViewById<RelativeLayout>(R.id.olvidasteContrasenia)// Reemplaza con el ID de tu diseño de inicio de sesión
-            // Crear una instancia del fragmento que deseas mostrar
-            val fragmentMenuOlvidasteContrasenia = FragmentOlvidasteContrasenia()
-            // Obtener el FragmentManager
-            val fragmentManager = supportFragmentManager
-            // Comenzar una transacción de fragmento
-            val transaction = fragmentManager.beginTransaction()
-            // Reemplazar el contenido del contenedor con el fragmento
-            transaction.replace(R.id.menuLogin, fragmentMenuOlvidasteContrasenia)
-            // Hacer commit para aplicar la transacción
-            transaction.addToBackStack(null).commit()
-
-        }
-    }
-
     private fun sendLoginRequest() {
         // text fields
         val editTextNombreUsuario = findViewById<EditText>(R.id.plainTextRegistroNombre)
@@ -152,17 +143,6 @@ class MainActivity : AppCompatActivity() {
         transaction.addToBackStack(null).commit()
 
     }
-
-    fun volver() {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-
-                println("no vas a poder volver")
-
-            }
-        }
-    }
-
     fun mostrarMensajeError(error: String) {
 
         val mensajeError =
@@ -172,21 +152,37 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-   fun ocultarMensajeError(){
+   fun ocultarMensajeError() {
        val editTextNombreUsuario = findViewById<EditText>(R.id.plainTextRegistroNombre)
        val editTextContrasenia = findViewById<EditText>(R.id.plainTextContrasenia)
-       editTextNombreUsuario.setOnClickListener{
+       editTextNombreUsuario.setOnClickListener {
            val mensajeError =
                findViewById<TextView>(R.id.textViewError)
            mensajeError.visibility = View.GONE
        }
-       editTextContrasenia.setOnClickListener{
+       editTextContrasenia.setOnClickListener {
            val mensajeError =
                findViewById<TextView>(R.id.textViewError)
            mensajeError.visibility = View.GONE
        }
 
 
+   }override fun onBackPressed() {
+        if (backButtonEnabled) {
+            super.onBackPressed() // Permite que el botón de retroceso funcione en la actividad principal.
+        } else {
+            // No hagas nada en este método para deshabilitar el botón de retroceso en la actividad principal.
+        }
     }
 
+    fun enableBackButton() {
+        backButtonEnabled = true
+    }
+
+    fun disableBackButton() {
+        backButtonEnabled = false
+    }
 }
+
+
+
