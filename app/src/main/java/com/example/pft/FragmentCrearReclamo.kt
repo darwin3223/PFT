@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Spinner
@@ -63,12 +64,36 @@ class FragmentCrearReclamo : Fragment() {
   }
 
     fun prueba(lista: List<Evento>) {
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, lista)
+        val listaConNull = listOf(null) + lista
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, listaConNull.map { it?.let { EventoSpinnerItem(it.titulo, it) } ?: "Seleccione un evento" })
         val spinnerEvento: Spinner = requireView().findViewById(R.id.spinnerEvento)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         spinnerEvento.adapter = adapter
+
+        spinnerEvento.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedItem = parent?.getItemAtPosition(position)
+                if (selectedItem is EventoSpinnerItem) {
+                    val selectedEvento = selectedItem.evento
+                    // Hacer algo con el objeto completo del evento seleccionado
+
+                } else {
+                    // El elemento seleccionado es nulo o "Seleccione un evento," manejarlo según sea necesario
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // No se seleccionó nada
+            }
+        }
     }
 
 
+}
+data class EventoSpinnerItem(val nombre: String, val evento: Evento) {
+    override fun toString(): String {
+        return nombre
+    }
 }
