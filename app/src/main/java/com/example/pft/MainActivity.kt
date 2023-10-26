@@ -36,10 +36,10 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         buttonlogin()
         noTienesCuenta()
         volver()
+        ocultarMensajeError()
 //        olividasteLaConstrasenia()
 
     }
@@ -108,18 +108,20 @@ class MainActivity : AppCompatActivity() {
         val userLogin = UserLoginRequest(username = nombreUsuario, password = contrasenia)
         val call = apiService.loginUsuario(userLogin)
 
-        call.enqueue(object : retrofit2.Callback<UserResponse>{
+        call.enqueue(object : retrofit2.Callback<UserResponse> {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 if (response.isSuccessful) {
-
-
                     when (response.body()?.usuario?.tipoUsuario) {
                         "ANALISTA" -> cargarMenuAnalista()
                         "ESTUDIANTE" -> cargarMenuEstudiante()
                     }
 
                 } else {
-                    println(response)
+                    when (response.code()) {
+                        404 -> mostrarMensajeError("El usuario no existe")
+                        401 -> mostrarMensajeError("La contraseña es incorrecta")
+                        else -> mostrarMensajeError("Error en el servidor intentelo mas tarde")
+                    }
                 }
             }
 
@@ -157,4 +159,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    fun mostrarMensajeError(error: String) {
+
+        val mensajeError =
+            findViewById<TextView>(R.id.textViewError)
+        mensajeError.visibility = View.VISIBLE
+        mensajeError.text = error
+
+    }
+
+   fun ocultarMensajeError(){
+       val editTextNombreUsuario = findViewById<EditText>(R.id.plainTextRegistroNombre)
+       val editTextContrasenia = findViewById<EditText>(R.id.plainTextContrasenia)
+       editTextNombreUsuario.setOnClickListener{
+           val mensajeError =
+               findViewById<TextView>(R.id.textViewError)
+           mensajeError.visibility = View.GONE
+       }
+       editTextContrasenia.setOnClickListener{
+           val mensajeError =
+               findViewById<TextView>(R.id.textViewError)
+           mensajeError.visibility = View.GONE
+       }
+
+
+    }
+
 }
