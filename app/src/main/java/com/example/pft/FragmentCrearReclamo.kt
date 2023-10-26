@@ -17,6 +17,11 @@ import retrofit2.Response
 
 
 class FragmentCrearReclamo : Fragment() {
+    lateinit var rootView: View
+
+    val apiService = ApiClient.apiService
+
+    val call: Call<List<Evento>> = apiService.getAllEventos("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHRUREQUYiLCJzdWIiOiJkYW1pYW4udmllcmEiLCJpZFVzdWFyaW8iOjE5LCJ0aXBvVXN1YXJpbyI6IkVTVFVESUFOVEUiLCJpYXQiOjE2OTgzNTM0ODMsImV4cCI6MTY5ODM1NTI4MywianRpIjoiZWY4MzBjNWQtYzUwYy00N2JhLWFlZWUtYmQ4MjhmMGZiN2FjIn0.0nhzIzBBMspBKP6Nk1UIxIirtTwHqkK3sASKSvV-IJE")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,31 +29,20 @@ class FragmentCrearReclamo : Fragment() {
     ): View? {
         (activity as MainActivity).enableBackButton()
 
-        val rootView = inflater.inflate(R.layout.fragment_crear_reclamo, container, false)
-        val spinnerEvento: Spinner = rootView.findViewById(R.id.spinnerEvento);
-        val apiService = ApiClient.apiService
+        rootView= inflater.inflate(R.layout.fragment_crear_reclamo, container, false)
 
-        val call: Call<List<Evento>> = apiService.getAllEventos("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHRUREQUYiLCJzdWIiOiJmcmFuY28uYm9yZ2lhbmkiLCJpZFVzdWFyaW8iOjIwLCJ0aXBvVXN1YXJpbyI6IlRVVE9SIiwiaWF0IjoxNjk4MzQ3NjQyLCJleHAiOjE2OTgzNDk0NDIsImp0aSI6IjIxYWM5ZDQ3LTMxMmEtNGM3Mi04YjQ2LTk5NDRkMDk1M2JiMiJ9.J_AiHHxXwhH6uOcSNrCHszQbr2oX35aTHAgAo52ZNcE")
+        return inflater.inflate(R.layout.fragment_crear_reclamo, container, false)
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        volver()
 
         call.enqueue(object : Callback<List<Evento>> {
             override fun onResponse(call: Call<List<Evento>>, response: Response<List<Evento>>) {
                 println(response)
                 if (response.isSuccessful) {
                     val events: List<Evento> = response.body() ?: emptyList()
-
-                    val adapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_item,
-                        events.map { it.titulo })
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    println("adapter $adapter")
-                    println(events.map { it.titulo })
-                    println("this is the response body ${response.body()}")
-
-                    // Set the adapter for the Spinner
-                    spinnerEvento.adapter = adapter
-
-                    adapter.notifyDataSetChanged()
+                    prueba(events)
                 } else {
                     println("Error trayendo los eventos ${response.code()}")
                 }
@@ -58,12 +52,6 @@ class FragmentCrearReclamo : Fragment() {
                 println(t.message)
             }
         })
-
-        return inflater.inflate(R.layout.fragment_crear_reclamo, container, false)
-    }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        volver()
     }
   fun volver(){
       val botonVolver = requireActivity().findViewById<ImageView>(R.id.imageArrowBackCrearReclamo)
@@ -73,4 +61,14 @@ class FragmentCrearReclamo : Fragment() {
       }
 
   }
+
+    fun prueba(lista: List<Evento>) {
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, lista)
+        val spinnerEvento: Spinner = requireView().findViewById(R.id.spinnerEvento)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        spinnerEvento.adapter = adapter
+    }
+
+
 }
