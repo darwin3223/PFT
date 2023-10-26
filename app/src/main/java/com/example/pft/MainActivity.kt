@@ -16,6 +16,7 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.cardview.widget.CardView
 import com.example.pft.models.ApiClient
+import com.example.pft.models.Evento
 import com.example.pft.models.UserLoginRequest
 import com.google.gson.Gson
 import retrofit2.Call
@@ -111,13 +112,30 @@ class MainActivity : AppCompatActivity() {
         call.enqueue(object : retrofit2.Callback<UserResponse> {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 if (response.isSuccessful) {
+                    val call2 = apiService.getAllEventos("Bearer ${response.body()?.token}")
+                    call2.enqueue(object: retrofit2.Callback<List<Evento>> {
+                        override fun onResponse(
+                            call: Call<List<Evento>>,
+                            response: Response<List<Evento>>
+                        ) {
+                            println("The events list looks something like that: ${response.body()}")
+                        }
+
+                        override fun onFailure(call: Call<List<Evento>>, t: Throwable) {
+                            println(t.message)
+                        }
+                    })
+
                     when (response.body()?.usuario?.tipoUsuario) {
                         "ANALISTA" -> cargarMenuAnalista()
                         "ESTUDIANTE" -> cargarMenuEstudiante()
+                        "TUTOR" -> cargarMenuAnalista()
                     }
 
                 } else {
                     when (response.code()) {
+
+
                         404 -> mostrarMensajeError("El usuario no existe")
                         401 -> mostrarMensajeError("La contraseña es incorrecta")
                         else -> mostrarMensajeError("Error en el servidor intentelo mas tarde")
@@ -140,7 +158,7 @@ class MainActivity : AppCompatActivity() {
         transaction.replace(R.id.menuLogin, fragmentMenuEstudiante)
         transaction.addToBackStack(null).commit()
     }
-
+//Comentario
     fun cargarMenuAnalista() {
         ocultarLogin()
         val fragmentMenuAnalista = FragmentMenuAnalista()
@@ -148,6 +166,7 @@ class MainActivity : AppCompatActivity() {
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.menuLogin, fragmentMenuAnalista)
         transaction.addToBackStack(null).commit()
+
     }
 
     fun volver() {
