@@ -2,13 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragmentCrearReclamo"
+    android:id="@+id/fragmentModificarEliminar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentCrearReclamo">
+    tools:context=".FragmentoModificarEliminarReclamo">
 
     <LinearLayout
-        android:id="@+id/layoutCrearReclamoTop"
+        android:id="@+id/layoutModificarEliminarTop"
         android:layout_width="413dp"
         android:layout_height="55dp"
         android:background="@color/utecColor"
@@ -20,7 +20,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <ImageView
-            android:id="@+id/imageArrowBackCrearReclamo"
+            android:id="@+id/imageArrowBackModificarEliminarModificarEliminar"
             android:layout_width="25dp"
             android:layout_height="20dp"
             android:layout_marginLeft="20dp"
@@ -34,27 +34,40 @@
             android:layout_marginLeft="25dp"
             android:layout_marginTop="12dp"
             android:layout_weight="1"
-            android:text="Redactar nuevo reclamo"
+            android:text="Editar Reclamo"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold" />
     </LinearLayout>
 
     <Button
-        android:id="@+id/buttonCrearReclamoReclamo"
+        android:id="@+id/buttonModificarEliminarModificarEliminar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/utecColor"
-        android:text="Crear reclamo"
+        android:text="Eliminar Reclamo "
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toEndOf="@+id/buttonModificarEliminarModificarEliminar2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.92" />
+
+    <Button
+        android:id="@+id/buttonModificarEliminarModificarEliminar2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/utecColor"
+        android:text="Modificar Reclamo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.14"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.92" />
 
     <EditText
-        android:id="@+id/editTextTextCrearReclamoTitulo"
+        android:id="@+id/editTextTextModificarEliminarTitulo"
         android:layout_width="340dp"
         android:layout_height="50dp"
         android:backgroundTint="@color/utecColor"
@@ -63,55 +76,55 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCrearReclamoTitulo"
+        app:layout_constraintTop_toBottomOf="@+id/textViewModificarEliminarTitulo"
         app:layout_constraintVertical_bias="0.00999999" />
 
     <Spinner
-        android:id="@+id/spinnerCrearEventoEvento"
+        android:id="@+id/spinnerModificarEliminarEvento"
         android:layout_width="340dp"
         android:layout_height="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonCrearReclamoReclamo"
+        app:layout_constraintBottom_toTopOf="@+id/buttonModificarEliminarModificarEliminar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLineCrearEventoDetalle"
+        app:layout_constraintTop_toBottomOf="@+id/textLineModificarEliminarDetalle"
         app:layout_constraintVertical_bias="0.06999999" />
 
     <Spinner
-        android:id="@+id/spinnerCrearEventoSemestre"
+        android:id="@+id/spinnerModificarEliminarSemestre"
         android:layout_width="340dp"
         android:layout_height="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonCrearReclamoReclamo"
+        app:layout_constraintBottom_toTopOf="@+id/buttonModificarEliminarModificarEliminar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearEventoEvento"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarEvento"
         app:layout_constraintVertical_bias="0.120000005" />
 
     <Spinner
-        android:id="@+id/spinnerCrearEventoEstado"
+        android:id="@+id/spinnerModificarEliminarEstado"
         android:layout_width="340dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearEventoSemestre"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarSemestre"
         app:layout_constraintVertical_bias="0.120000005" />
 
     <Spinner
-        android:id="@+id/spinnerCrearEventoTipoReclamo"
+        android:id="@+id/spinnerModificarEliminarTipoModificarEliminar"
         android:layout_width="340dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.521"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearEventoEstado"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarEstado"
         app:layout_constraintVertical_bias="0.120000005" />
 
     <TextView
-        android:id="@+id/textViewCrearReclamoTitulo"
+        android:id="@+id/textViewModificarEliminarTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
@@ -124,11 +137,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.08"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutCrearReclamoTop"
+        app:layout_constraintTop_toBottomOf="@+id/layoutModificarEliminarTop"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textViewCrearReclamoDetalle"
+        android:id="@+id/textViewModificarEliminarDetalle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
@@ -140,71 +153,71 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.08"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextCrearReclamoTitulo"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextModificarEliminarTitulo"
         app:layout_constraintVertical_bias="0.00999999" />
 
     <TextView
-        android:id="@+id/textViewCrearReclamoEvento"
+        android:id="@+id/textViewModificarEliminarEvento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:text="Evento"
         android:textColor="@color/utecColor"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerCrearEventoEvento"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerModificarEliminarEvento"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.13"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLineCrearEventoDetalle"
+        app:layout_constraintTop_toBottomOf="@+id/textLineModificarEliminarDetalle"
         app:layout_constraintVertical_bias="0.07999998" />
 
     <TextView
-        android:id="@+id/textViewReclamoSemestre"
+        android:id="@+id/textViewModificarEliminarSemestre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:text="Semestre"
         android:textColor="@color/utecColor"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerCrearEventoSemestre"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerModificarEliminarSemestre"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.132"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearEventoEvento"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarEvento"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textViewReclamoEstado"
+        android:id="@+id/textViewModificarEliminarEstado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:text="Estado"
         android:textColor="@color/utecColor"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerCrearEventoEstado"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerModificarEliminarEstado"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.132"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearEventoSemestre"
-        app:layout_constraintVertical_bias="0.060000002" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarSemestre"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textViewReclamoTipoReclamo"
+        android:id="@+id/textViewModificarEliminarTipoModificarEliminar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:text="Tipo de reclamo"
         android:textColor="@color/utecColor"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerCrearEventoTipoReclamo"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerModificarEliminarTipoModificarEliminar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearEventoEstado"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarEstado"
         app:layout_constraintVertical_bias="0.060000002" />
 
     <EditText
-        android:id="@+id/textLineCrearEventoDetalle"
+        android:id="@+id/textLineModificarEliminarDetalle"
         android:layout_width="338dp"
         android:layout_height="105dp"
         android:backgroundTint="@color/utecColor"
@@ -214,7 +227,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCrearReclamoDetalle"
+        app:layout_constraintTop_toBottomOf="@+id/textViewModificarEliminarDetalle"
         app:layout_constraintVertical_bias="0.00999999" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

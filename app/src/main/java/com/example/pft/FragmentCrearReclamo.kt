@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Spinner
 import com.example.pft.models.ApiClient
-import com.example.pft.models.ApiService
 import com.example.pft.models.Evento
 import retrofit2.Call
 import retrofit2.Callback
@@ -67,7 +66,7 @@ class FragmentCrearReclamo : Fragment() {
         val listaConNull = listOf(null) + lista
 
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, listaConNull.map { it?.let { EventoSpinnerItem(it.titulo, it) } ?: "Seleccione un evento" })
-        val spinnerEvento: Spinner = requireView().findViewById(R.id.spinnerEvento)
+        val spinnerEvento: Spinner = requireView().findViewById(R.id.spinnerCrearEventoEvento)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         spinnerEvento.adapter = adapter
