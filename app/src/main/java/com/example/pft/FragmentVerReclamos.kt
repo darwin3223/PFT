@@ -6,8 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.RelativeLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.pft.models.ApiClient
 import com.example.pft.models.EstadoSolicitud
 import com.example.pft.models.Evento
@@ -17,7 +21,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class FragmentVerReclamos : Fragment() {
-
+    var reclamoSeleccionado : Reclamo? = null
     var callReclamos: Call<List<Reclamo>>? = null
     val apiService = ApiClient.apiService
 
@@ -63,6 +67,9 @@ class FragmentVerReclamos : Fragment() {
     }
 
     private fun rellenarListaReclamos(lista: List<Reclamo>){
+        val linealFrameMostrarReclamos =
+            requireActivity().findViewById<LinearLayout>(R.id.linearLayoutVerReclamos)
+
         val listViewReclamos: ListView = requireView().findViewById(R.id.listViewReclamos)
 
         val adapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,lista.map { it.titulo })
@@ -71,9 +78,20 @@ class FragmentVerReclamos : Fragment() {
 
         listViewReclamos.setOnItemClickListener { parent, view, position, id ->
             val selectedItem = lista[position]
-            // Realiza alguna acción con el elemento seleccionado
-
+            reclamoSeleccionado = selectedItem
+            cargarVistaModificarElimianarReclamo()
+            linealFrameMostrarReclamos.visibility = View.GONE
         }
     }
+    fun cargarVistaModificarElimianarReclamo() {
 
+        val fragmentoModificarEliminarReclamo = FragmentoModificarEliminarReclamo()
+        val fragmentManager = requireActivity().supportFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragmentoVerReclamos, fragmentoModificarEliminarReclamo)
+        transaction.addToBackStack(null).commit()
+
+    }
 }
+
+

@@ -39,17 +39,10 @@ class FragmentMenuAnalista : Fragment() {
         val buttonAtenderReclamos =
             requireActivity().findViewById<Button>(R.id.buttonAtenderReclamos)
         buttonAtenderReclamos.setOnClickListener {
-            val atenderReclamo =
-                requireActivity().findViewById<RelativeLayout>(R.id.fragmentoAtenderReclamos)// Reemplaza con el ID de tu diseño de inicio de sesión
-            // Crear una instancia del fragmento que deseas mostrar
             val fragmentAtenderReclamos = FragmentAtenderReclamos()
-            // Obtener el FragmentManager
             val fragmentManager = requireActivity().supportFragmentManager
-            // Comenzar una transacción de fragmento
             val transaction = fragmentManager.beginTransaction()
-            // Reemplazar el contenido del contenedor con el fragmento
             transaction.replace(R.id.menuLogin, fragmentAtenderReclamos)
-            // Hacer commit para aplicar la transacción
             transaction.addToBackStack(null).commit()
         }
     }

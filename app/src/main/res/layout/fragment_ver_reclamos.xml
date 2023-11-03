@@ -41,6 +41,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayoutVerReclamos"
         android:layout_width="344dp"
         android:layout_height="521dp"
         android:orientation="vertical"
