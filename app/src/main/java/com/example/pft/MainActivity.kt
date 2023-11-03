@@ -18,6 +18,7 @@ import androidx.cardview.widget.CardView
 import com.example.pft.models.ApiClient
 import com.example.pft.models.Evento
 import com.example.pft.models.UserLoginRequest
+import com.example.pft.models.Usuario
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Response
@@ -31,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var imageViewLogoUtec: ImageView
     private lateinit var plainTextRegistroNombre: EditText
     private lateinit var plainTextRegistroContrasenia: EditText
+    var usuarioLogueado: Usuario? = null
+    var tokenJWT: String? = ""
     private var backButtonEnabled = false
 
     @SuppressLint("WrongViewCast")
@@ -103,20 +106,8 @@ class MainActivity : AppCompatActivity() {
         call.enqueue(object : retrofit2.Callback<UserResponse> {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 if (response.isSuccessful) {
-                    val call2 = apiService.getAllEventos("Bearer ${response.body()?.token}")
-                    call2.enqueue(object: retrofit2.Callback<List<Evento>> {
-                        override fun onResponse(
-                            call: Call<List<Evento>>,
-                            response: Response<List<Evento>>
-                        ) {
-                            println("The events list looks something like that: ${response.body()}")
-                        }
-
-                        override fun onFailure(call: Call<List<Evento>>, t: Throwable) {
-                            println(t.message)
-                        }
-                    })
-
+                    tokenJWT = response.body()?.token
+                    usuarioLogueado = response.body()?.usuario
                     when (response.body()?.usuario?.tipoUsuario) {
                         "ANALISTA" -> cargarMenuAnalista()
                         "ESTUDIANTE" -> cargarMenuEstudiante()
@@ -125,7 +116,6 @@ class MainActivity : AppCompatActivity() {
 
                 } else {
                     when (response.code()) {
-
 
                         404 -> mostrarMensajeError("El usuario no existe")
                         401 -> mostrarMensajeError("La contraseña es incorrecta")

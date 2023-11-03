@@ -54,7 +54,7 @@
         app:layout_constraintVertical_bias="0.92" />
 
     <EditText
-        android:id="@+id/editTextTextCrearReclamoTitulo"
+        android:id="@+id/editTextCrearReclamoTitulo"
         android:layout_width="340dp"
         android:layout_height="50dp"
         android:backgroundTint="@color/utecColor"
@@ -67,48 +67,49 @@
         app:layout_constraintVertical_bias="0.00999999" />
 
     <Spinner
-        android:id="@+id/spinnerCrearEventoEvento"
+        android:id="@+id/spinnerCrearReclamoEvento"
         android:layout_width="340dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toTopOf="@+id/buttonCrearReclamoReclamo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLineCrearEventoDetalle"
+        app:layout_constraintTop_toBottomOf="@+id/textLineCrearReclamoDetalle"
         app:layout_constraintVertical_bias="0.06999999" />
 
     <Spinner
-        android:id="@+id/spinnerCrearEventoSemestre"
+        android:id="@+id/spinnerCrearReclamoSemestre"
         android:layout_width="340dp"
         android:layout_height="50dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/buttonCrearReclamoReclamo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearEventoEvento"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearReclamoEvento"
         app:layout_constraintVertical_bias="0.120000005" />
 
     <Spinner
-        android:id="@+id/spinnerCrearEventoEstado"
+        android:id="@+id/spinnerCrearReclamoEstado"
         android:layout_width="340dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintHorizontal_bias="0.511"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearEventoSemestre"
-        app:layout_constraintVertical_bias="0.120000005" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearReclamoSemestre"
+        app:layout_constraintVertical_bias="0.14" />
 
     <Spinner
-        android:id="@+id/spinnerCrearEventoTipoReclamo"
+        android:id="@+id/spinnerCrearReclamoTipo"
         android:layout_width="340dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.521"
+        app:layout_constraintHorizontal_bias="0.511"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearEventoEstado"
-        app:layout_constraintVertical_bias="0.120000005" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearReclamoEstado"
+        app:layout_constraintVertical_bias="0.138" />
 
     <TextView
         android:id="@+id/textViewCrearReclamoTitulo"
@@ -117,7 +118,7 @@
         android:layout_gravity="left"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="38dp"
-        android:text="Titúlo"
+        android:text="Título"
         android:textColor="@color/utecColor"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -136,12 +137,11 @@
         android:text="Detalle"
         android:textColor="@color/utecColor"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textLineCrearReclamoDetalle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.08"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextCrearReclamoTitulo"
-        app:layout_constraintVertical_bias="0.00999999" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextCrearReclamoTitulo" />
 
     <TextView
         android:id="@+id/textViewCrearReclamoEvento"
@@ -151,27 +151,26 @@
         android:text="Evento"
         android:textColor="@color/utecColor"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerCrearEventoEvento"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerCrearReclamoEvento"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.13"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLineCrearEventoDetalle"
-        app:layout_constraintVertical_bias="0.07999998" />
+        app:layout_constraintTop_toBottomOf="@+id/textLineCrearReclamoDetalle" />
 
     <TextView
         android:id="@+id/textViewReclamoSemestre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:layout_gravity="left"
         android:text="Semestre"
         android:textColor="@color/utecColor"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerCrearEventoSemestre"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerCrearReclamoSemestre"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.132"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearEventoEvento"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearReclamoEvento" />
 
     <TextView
         android:id="@+id/textViewReclamoEstado"
@@ -181,12 +180,11 @@
         android:text="Estado"
         android:textColor="@color/utecColor"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerCrearEventoEstado"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerCrearReclamoEstado"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.132"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearEventoSemestre"
-        app:layout_constraintVertical_bias="0.060000002" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearReclamoSemestre" />
 
     <TextView
         android:id="@+id/textViewReclamoTipoReclamo"
@@ -196,15 +194,14 @@
         android:text="Tipo de reclamo"
         android:textColor="@color/utecColor"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerCrearEventoTipoReclamo"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerCrearReclamoTipo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearEventoEstado"
-        app:layout_constraintVertical_bias="0.060000002" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerCrearReclamoEstado" />
 
     <EditText
-        android:id="@+id/textLineCrearEventoDetalle"
+        android:id="@+id/textLineCrearReclamoDetalle"
         android:layout_width="338dp"
         android:layout_height="105dp"
         android:backgroundTint="@color/utecColor"
@@ -214,7 +211,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCrearReclamoDetalle"
-        app:layout_constraintVertical_bias="0.00999999" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextCrearReclamoTitulo"
+        app:layout_constraintVertical_bias="0.050000012" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

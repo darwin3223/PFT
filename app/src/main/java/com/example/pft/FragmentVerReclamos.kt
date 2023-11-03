@@ -5,9 +5,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.ListView
+import com.example.pft.models.ApiClient
+import com.example.pft.models.EstadoSolicitud
+import com.example.pft.models.Evento
+import com.example.pft.models.Reclamo
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FragmentVerReclamos : Fragment() {
+
+    var callReclamos: Call<List<Reclamo>>? = null
+    val apiService = ApiClient.apiService
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -18,6 +31,7 @@ class FragmentVerReclamos : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         volver()
+        cargarReclamos()
     }
 
     fun volver(){
@@ -28,4 +42,38 @@ class FragmentVerReclamos : Fragment() {
         }
 
     }
+
+    private fun cargarReclamos(){
+        callReclamos = apiService.getAllReclamos("Bearer "+(activity as MainActivity).tokenJWT)
+
+        callReclamos?.enqueue(object : Callback<List<Reclamo>> {
+            override fun onResponse(call: Call<List<Reclamo>>, response: Response<List<Reclamo>>) {
+                println(response)
+                if (response.isSuccessful) {
+                    val reclamos: List<Reclamo> = response.body() ?: emptyList()
+                    rellenarListaReclamos(reclamos)
+                } else {
+                    println("Error trayendo los reclamos ${response.code()}")
+                }
+            }
+            override fun onFailure(call: Call<List<Reclamo>>, t: Throwable) {
+                println(t.message)
+            }
+        })
+    }
+
+    private fun rellenarListaReclamos(lista: List<Reclamo>){
+        val listViewReclamos: ListView = requireView().findViewById(R.id.listViewReclamos)
+
+        val adapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,lista.map { it.titulo })
+
+        listViewReclamos.adapter = adapter
+
+        listViewReclamos.setOnItemClickListener { parent, view, position, id ->
+            val selectedItem = lista[position]
+            // Realiza alguna acción con el elemento seleccionado
+
+        }
+    }
+
 }

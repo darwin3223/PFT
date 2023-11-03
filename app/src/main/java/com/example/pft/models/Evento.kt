@@ -1,7 +1,7 @@
 package com.example.pft.models
 
 data class Evento (
-    val idEvento: Int,
+    val idEvento: Long,
     val titulo: String,
     val informacion: String,
     val tipoEvento: String,
@@ -12,5 +12,10 @@ data class Evento (
     val creditos: Int,
     val estadoEvento: String,
     val itr: Itr,
-    val listaSemestres: List<Any>  // You can replace Any with the actual data type if needed
+    val listaSemestres: List<Semestre>  // You can replace Any with the actual data type if needed
+)
+
+data class Semestre (
+    val idSemestre: Long,
+    val nombre: String
 )
