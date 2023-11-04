@@ -6,7 +6,7 @@ data class Reclamo(
     val tipoReclamo: String?,
     val detalle: String?,
     val idSemestre: Long?,
-    val idEstado: Long,
+    val idEstado: Long?,
     val idEstudiante: Long?,
     val idEvento: Long?
 )

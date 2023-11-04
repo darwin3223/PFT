@@ -1,12 +1,14 @@
 package com.example.pft
 
 import android.os.Bundle
+import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
@@ -69,16 +71,17 @@ class FragmentVerReclamos : Fragment() {
     private fun rellenarListaReclamos(lista: List<Reclamo>){
         val linealFrameMostrarReclamos =
             requireActivity().findViewById<LinearLayout>(R.id.linearLayoutVerReclamos)
-
+        val mainActivity = activity as MainActivity
         val listViewReclamos: ListView = requireView().findViewById(R.id.listViewReclamos)
-
         val adapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,lista.map { it.titulo })
 
         listViewReclamos.adapter = adapter
 
         listViewReclamos.setOnItemClickListener { parent, view, position, id ->
             val selectedItem = lista[position]
+            mainActivity.reclamoSeleccionado = selectedItem
             reclamoSeleccionado = selectedItem
+
             cargarVistaModificarElimianarReclamo()
             linealFrameMostrarReclamos.visibility = View.GONE
         }
@@ -92,6 +95,8 @@ class FragmentVerReclamos : Fragment() {
         transaction.addToBackStack(null).commit()
 
     }
+
+
 }
 
 

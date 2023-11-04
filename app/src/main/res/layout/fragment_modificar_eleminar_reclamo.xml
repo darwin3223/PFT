@@ -41,7 +41,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/buttonModificarEliminarModificarEliminar"
+        android:id="@+id/buttonEliminarReclamo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/utecColor"
@@ -49,12 +49,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintStart_toEndOf="@+id/buttonModificarEliminarModificarEliminar2"
+        app:layout_constraintStart_toEndOf="@+id/buttonModificar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.92" />
 
     <Button
-        android:id="@+id/buttonModificarEliminarModificarEliminar2"
+        android:id="@+id/buttonModificar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/utecColor"
@@ -83,7 +83,7 @@
         android:id="@+id/spinnerModificarEliminarEvento"
         android:layout_width="340dp"
         android:layout_height="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonModificarEliminarModificarEliminar"
+        app:layout_constraintBottom_toTopOf="@+id/buttonEliminarReclamo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +95,7 @@
         android:layout_width="340dp"
         android:layout_height="50dp"
         android:clickable="true"
-        app:layout_constraintBottom_toTopOf="@+id/buttonModificarEliminarModificarEliminar"
+        app:layout_constraintBottom_toTopOf="@+id/buttonEliminarReclamo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
@@ -115,7 +115,7 @@
         app:layout_constraintVertical_bias="0.120000005" />
 
     <Spinner
-        android:id="@+id/spinnerModificarEliminarTipoModificarEliminar"
+        android:id="@+id/spinnerModificarEliminarTipo"
         android:layout_width="340dp"
         android:layout_height="50dp"
         android:clickable="true"
@@ -212,7 +212,7 @@
         android:text="Tipo de reclamo"
         android:textColor="@color/utecColor"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerModificarEliminarTipoModificarEliminar"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerModificarEliminarTipo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"

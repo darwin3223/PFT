@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import com.example.pft.models.ApiClient
 import com.example.pft.models.EstadoSolicitud
 import com.example.pft.models.Evento
@@ -74,15 +75,15 @@ class FragmentCrearReclamo : Fragment() {
 
             val editTextTitle =
                 requireView().findViewById<EditText>(R.id.editTextCrearReclamoTitulo)
-            var textTitle = editTextTitle.text.toString()
+            var textTitle: String? = editTextTitle.text.toString()
 
             val editTextDetail =
                 requireView().findViewById<EditText>(R.id.textLineCrearReclamoDetalle)
-            var textDetail = editTextDetail.text.toString()
+            var textDetail: String? = editTextDetail.text.toString()
 
             val reclamo = Reclamo(-1,textTitle,tipoSeleccionado,textDetail,
                 semestreSeleccionado?.idSemestre,
-                estadoSeleccionado!!.idEstado,student, eventoSeleccionado?.idEvento
+                estadoSeleccionado?.idEstado,student, eventoSeleccionado?.idEvento
             )
             callCreateReclamo = apiService.createReclamo("Bearer "+(activity as MainActivity).tokenJWT,reclamo)
             callCreateReclamo?.enqueue(object : Callback<Reclamo> {
@@ -90,14 +91,18 @@ class FragmentCrearReclamo : Fragment() {
                 override fun onResponse(call: Call<Reclamo>, response: Response<Reclamo>) {
                     println(response)
                     if (response.isSuccessful) {
-                        println("El reclamo se registro correctamente")
-                    } else {
-                        println("Error trayendo los reclamos ${response.code()}")
+                        val mensaje = "Reclamo creado exitosamente " + response.code()
+                        Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show()
+                    }else if (response.code() == 400){
+                        Toast.makeText(requireContext(), response.errorBody()?.string(), Toast.LENGTH_LONG).show()
+                    }else {
+                        Toast.makeText(requireContext(), response.errorBody()?.string(), Toast.LENGTH_LONG).show()
+                        }
                     }
-                }
 
                 override fun onFailure(call: Call<Reclamo>, t: Throwable) {
-                    println(t.message)
+                    val mensaje = "Error!, al ingresar el reclamo."
+                    Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show()
                 }
             })
         }
@@ -227,7 +232,7 @@ class FragmentCrearReclamo : Fragment() {
     }
 
     private fun cargarSpinnerType(){
-        val listaDeTipos = listOf("Seleccione un estado","EVENTO_VME", "ACTIVIDAD_APE")
+        val listaDeTipos = listOf("Seleccione un tipo","EVENTO_VME", "ACTIVIDAD_APE")
 
         // Encuentra tu Spinner en el diseño XML
         val spinner =
@@ -249,7 +254,7 @@ class FragmentCrearReclamo : Fragment() {
                     // Maneja la selección aquí
                     val selectedItem = listaDeTipos[position]
 
-                    if (selectedItem != "Seleccione un estado"){
+                    if (selectedItem != "Seleccione un tipo"){
                         tipoSeleccionado = selectedItem
                     }else{
                         tipoSeleccionado = null
