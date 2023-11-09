@@ -120,8 +120,8 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     when (response.code()) {
 
-                        404 -> mostrarMensajeError("El usuario no existe")
-                        401 -> mostrarMensajeError("La contraseña es incorrecta")
+                        404 -> mostrarMensajeError(response.errorBody()?.string())
+                        401 -> mostrarMensajeError(response.errorBody()?.string())
                         else -> mostrarMensajeError("Error en el servidor intentelo mas tarde")
                     }
                 }
@@ -142,7 +142,6 @@ class MainActivity : AppCompatActivity() {
         transaction.replace(R.id.menuLogin, fragmentMenuEstudiante)
         transaction.addToBackStack(null).commit()
     }
-//Comentario
     fun cargarMenuAnalista() {
         ocultarLogin()
         val fragmentMenuAnalista = FragmentMenuAnalista()
@@ -152,7 +151,7 @@ class MainActivity : AppCompatActivity() {
         transaction.addToBackStack(null).commit()
 
     }
-    fun mostrarMensajeError(error: String) {
+    fun mostrarMensajeError(error: String?) {
 
         val mensajeError =
             findViewById<TextView>(R.id.textViewError)
