@@ -30,8 +30,6 @@
         android:id="@+id/cardViewLogin"
         android:layout_width="389dp"
         android:layout_height="420dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:background="@drawable/rectangulo"
         app:cardCornerRadius="30dp"
         app:cardElevation="20dp"

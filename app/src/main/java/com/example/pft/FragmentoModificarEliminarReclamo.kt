@@ -2,6 +2,7 @@ package com.example.pft
 
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -147,11 +148,12 @@ class FragmentoModificarEliminarReclamo : Fragment() {
             callDeleteReclamo = apiService.deleteReclamo(mainActivity.reclamoSeleccionado?.idReclamo,"Bearer "+(activity as MainActivity).tokenJWT)
             callDeleteReclamo?.enqueue(object : Callback<Reclamo> {
                 override fun onResponse(call: Call<Reclamo>, response: Response<Reclamo>) {
-                    if (response.isSuccessful) {
+                    if (response.code() == 200) {
                         val mensaje = "Baja logica exitosa"
                         Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show()
                     }else{
-                        Toast.makeText(requireContext(), response.errorBody()?.string(), Toast.LENGTH_LONG).show()
+                        val errorBody = response.errorBody()?.string()
+                        Toast.makeText(requireContext(), errorBody, Toast.LENGTH_LONG).show()
                     }
                 }
 

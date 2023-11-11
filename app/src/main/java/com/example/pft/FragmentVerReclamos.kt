@@ -32,6 +32,7 @@ class FragmentVerReclamos : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         (activity as MainActivity).enableBackButton()
+        cargarReclamos()
         return inflater.inflate(R.layout.fragment_ver_reclamos, container, false)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
