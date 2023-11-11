@@ -42,7 +42,6 @@ class FragmentCrearReclamo : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         (activity as MainActivity).enableBackButton()
-
         rootView = inflater.inflate(R.layout.fragment_crear_reclamo, container, false)
 
         return inflater.inflate(R.layout.fragment_crear_reclamo, container, false)
