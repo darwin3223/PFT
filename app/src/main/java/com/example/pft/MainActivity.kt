@@ -20,6 +20,7 @@ import androidx.cardview.widget.CardView
 import com.example.pft.models.ApiClient
 import com.example.pft.models.Evento
 import com.example.pft.models.Reclamo
+import com.example.pft.models.ReclamoCompleto
 import com.example.pft.models.UserLoginRequest
 import com.example.pft.models.Usuario
 import com.google.gson.Gson
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var plainTextRegistroContrasenia: EditText
     var usuarioLogueado: Usuario? = null
     var tokenJWT: String? = ""
-    var reclamoSeleccionado: Reclamo? = null
+    lateinit var reclamoSeleccionado: ReclamoCompleto
     private var backButtonEnabled = false
 
     @SuppressLint("WrongViewCast")

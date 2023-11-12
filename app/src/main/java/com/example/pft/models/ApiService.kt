@@ -16,6 +16,9 @@ interface ApiService {
     @GET("eventos")
     fun getAllEventos(@Header("Authorization") token: String?): Call<List<Evento>>
 
+    @GET("eventos/{id}")
+    fun getEventoId(@Path("id") id: Long?,@Header("Authorization") token: String?): Call<Evento>
+
     @GET("estadosSolicitud")
     fun getAllEstados(@Header("Authorization") token: String?): Call<List<EstadoSolicitud>>
 
@@ -23,7 +26,7 @@ interface ApiService {
     fun createReclamo(@Header("Authorization") token: String?, @Body reclamo: Reclamo?): Call<Reclamo>
 
     @GET("reclamos")
-    fun getAllReclamos(@Header("Authorization") token: String?): Call<List<Reclamo>>
+    fun getAllReclamos(@Header("Authorization") token: String?): Call<List<ReclamoCompleto>>
 
     @PUT("reclamos")
     fun updateReclamo(@Header("Authorization") token: String?, @Body reclamo: Reclamo?): Call<Reclamo>

@@ -38,11 +38,17 @@ class FragmentoModificarEliminarReclamo : Fragment() {
 
     private val apiService = ApiClient.apiService
 
+    var positionEvento: Int = -1
+
+    private lateinit var events: List<Evento>
+
     private var callDeleteReclamo: Call<Reclamo>? = null
 
     private var callUpdateReclamo: Call<Reclamo>? = null
 
     private var callEventos: Call<List<Evento>>? = null
+
+    private var callEventoId: Call<Evento>? = null
 
     private var callEstados: Call<List<EstadoSolicitud>>? = null
 //    private var linealFrameMostrarReclamos =
@@ -78,22 +84,15 @@ class FragmentoModificarEliminarReclamo : Fragment() {
         editTextDetails.text =
             Editable.Factory.getInstance().newEditable(mainActivity.reclamoSeleccionado?.detalle)
 
-//        val spinnerEvento: Spinner = view.findViewById(R.id.spinnerModificarEliminarEvento)
-//
-//        val adapter = spinnerEvento.adapter
-//        for (i in 0 until adapter.count) {
-//            val item = adapter.getItem(i)
-//            if (item == mainActivity.reclamoSeleccionado?.idEvento) {
-//                spinnerEvento.setSelection(i) // Deseleccionar el elemento
-//                break
-//            }
-//        }
+        setearSpinnerEvento()
+
+
+
 
 
         volver()
 
     }
-
     fun volver() {
         var botonVolver =
             requireActivity().findViewById<ImageView>(R.id.imageArrowBackModificarEliminarModificarEliminar)
@@ -110,6 +109,31 @@ class FragmentoModificarEliminarReclamo : Fragment() {
             mostrarFrameModificarReclamo()
         }
     }
+    var listaEventos: List<Evento>? = null
+    fun setearSpinnerEvento(){
+        val mainActivity = activity as MainActivity
+        callEventos = apiService.getAllEventos("Bearer "+(activity as MainActivity).tokenJWT)
+
+        callEventos?.enqueue(object : Callback<List<Evento>> {
+            override fun onResponse(call: Call<List<Evento>>, response: Response<List<Evento>>) {
+                println(response)
+                if (response.isSuccessful) {
+                    events = response.body() ?: emptyList()
+                    val spinnerEvento: Spinner? = view?.findViewById(R.id.spinnerModificarEliminarEvento)
+
+                    var eventoSeleccionado: Evento = mainActivity.reclamoSeleccionado.evento
+                    positionEvento = events.indexOf(eventoSeleccionado)
+                    spinnerEvento?.setSelection(positionEvento+1)
+                } else {
+                    println("Error trayendo los eventos ${response.code()}")
+                }
+            }
+            override fun onFailure(call: Call<List<Evento>>, t: Throwable) {
+                println(t.message)
+            }
+        })
+    }
+
     fun eliminarReclamos(){
         val buttonEliminarReclamoReclamo = requireView().findViewById<Button>(R.id.buttonEliminarReclamo)
         buttonEliminarReclamoReclamo.setOnClickListener {

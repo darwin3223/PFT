@@ -12,7 +12,7 @@ data class Evento (
     val creditos: Int,
     val estadoEvento: String,
     val itr: Itr,
-    val listaSemestres: List<Semestre>  // You can replace Any with the actual data type if needed
+    val listaSemestres: List<Semestre>
 )
 
 data class Semestre (

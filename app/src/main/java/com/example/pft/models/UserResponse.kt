@@ -41,3 +41,24 @@ data class Departamento(
     val idDepartamento: Int,
     val nombre: String
 )
+
+data class Estudiante(
+    val idUsuario: Int,
+    val nombre: String,
+    val apellido: String,
+    val documento: Long,
+    val fechaNacimiento: Long,
+    val nombreUsuario: String,
+    val contrasenia: String,
+    val tipoUsuario: String,
+    val verificacion: String,
+    val mail: String,
+    val mailInstitucional: String,
+    val telefono: String,
+    val genero: String,
+    val estadoUsuario: String,
+    val itr: Itr,
+    val localidad: Localidad,
+    val estadoEstudiante: String,
+    val añoIngreso: Int
+)

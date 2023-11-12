@@ -18,13 +18,14 @@ import com.example.pft.models.ApiClient
 import com.example.pft.models.EstadoSolicitud
 import com.example.pft.models.Evento
 import com.example.pft.models.Reclamo
+import com.example.pft.models.ReclamoCompleto
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class FragmentVerReclamos : Fragment() {
-    var reclamoSeleccionado : Reclamo? = null
-    var callReclamos: Call<List<Reclamo>>? = null
+    var reclamoSeleccionado : ReclamoCompleto? = null
+    var callReclamos: Call<List<ReclamoCompleto>>? = null
     val apiService = ApiClient.apiService
 
     override fun onCreateView(
@@ -53,23 +54,23 @@ class FragmentVerReclamos : Fragment() {
     private fun cargarReclamos(){
         callReclamos = apiService.getAllReclamos("Bearer "+(activity as MainActivity).tokenJWT)
 
-        callReclamos?.enqueue(object : Callback<List<Reclamo>> {
-            override fun onResponse(call: Call<List<Reclamo>>, response: Response<List<Reclamo>>) {
+        callReclamos?.enqueue(object : Callback<List<ReclamoCompleto>> {
+            override fun onResponse(call: Call<List<ReclamoCompleto>>, response: Response<List<ReclamoCompleto>>) {
                 println(response)
                 if (response.isSuccessful) {
-                    val reclamos: List<Reclamo> = response.body() ?: emptyList()
+                    val reclamos: List<ReclamoCompleto> = response.body() ?: emptyList()
                     rellenarListaReclamos(reclamos)
                 } else {
                     println("Error trayendo los reclamos ${response.code()}")
                 }
             }
-            override fun onFailure(call: Call<List<Reclamo>>, t: Throwable) {
+            override fun onFailure(call: Call<List<ReclamoCompleto>>, t: Throwable) {
                 println(t.message)
             }
         })
     }
 
-    private fun rellenarListaReclamos(lista: List<Reclamo>){
+    private fun rellenarListaReclamos(lista: List<ReclamoCompleto>){
         val linealFrameMostrarReclamos =
             requireActivity().findViewById<LinearLayout>(R.id.linearLayoutVerReclamos)
         val mainActivity = activity as MainActivity
