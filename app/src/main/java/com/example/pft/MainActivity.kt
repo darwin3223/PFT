@@ -7,6 +7,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -26,7 +28,8 @@ import retrofit2.Response
 import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
-
+    private lateinit var editTextPassword: EditText
+    private lateinit var imageViewEye: ImageView
     private lateinit var buttonLogin: Button
     private lateinit var textViewOlvidasteContrasenia: TextView
     private lateinit var cardViewLogin: CardView
@@ -35,22 +38,31 @@ class MainActivity : AppCompatActivity() {
     private lateinit var plainTextRegistroContrasenia: EditText
     var usuarioLogueado: Usuario? = null
     var tokenJWT: String? = ""
-
     var reclamoSeleccionado: Reclamo? = null
     private var backButtonEnabled = false
 
     @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        editTextPassword = findViewById(R.id.plainTextContrasenia)
+        imageViewEye = findViewById(R.id.imageViewEyeOpen)
         buttonlogin()
         noTienesCuenta()
         ocultarMensajeError()
-//        olividasteLaConstrasenia()
-
+        olvidasteLaContrasenia()
     }
-
+    fun togglePasswordVisibility(view: View) {
+        if (editTextPassword.transformationMethod == PasswordTransformationMethod.getInstance()) {
+            // Mostrar contraseña
+            editTextPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            imageViewEye.setImageResource(R.drawable.ic_eye_open)
+        } else {
+            // Ocultar contraseña
+            editTextPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+            imageViewEye.setImageResource(R.drawable.ic_eye_closed)
+        }
+    }
     fun noTienesCuenta() {
         val noTienesCuentaButton = findViewById<TextView>(R.id.textViewNoTienesCuenta)
 
@@ -69,8 +81,9 @@ class MainActivity : AppCompatActivity() {
         olvidastelaContraseniaButton.setOnClickListener {
             val readConfig = ReadConfig()
             val serverUrl = readConfig.getServerUrl()
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl/INSERTARURL"))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl/restore-password"))
             intent.resolveActivity(packageManager)
+            startActivity(intent)
         }
     }
 

@@ -28,8 +28,10 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewLogin"
-        android:layout_width="389dp"
-        android:layout_height="420dp"
+        android:layout_width="376dp"
+        android:layout_height="400dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:background="@drawable/rectangulo"
         app:cardCornerRadius="30dp"
         app:cardElevation="20dp"
@@ -40,20 +42,31 @@
         app:layout_constraintVertical_bias="0.53"
         tools:ignore="MissingConstraints">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="389dp"
             android:layout_height="420dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="-230dp"
-            android:orientation="vertical"
             android:padding="24dp">
+
+            <ImageView
+                android:id="@+id/imageViewEyeOpen"
+                android:layout_width="25dp"
+                android:layout_height="40dp"
+                android:onClick="togglePasswordVisibility"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewNoTienesCuenta"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.94"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.43"
+                app:srcCompat="@drawable/ic_eye_closed" />
 
             <TextView
                 android:id="@+id/textViewNombreUsuario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="10dp"
                 android:text="Usuario"
@@ -61,14 +74,14 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.16"
+                app:layout_constraintHorizontal_bias="0.06"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.13" />
+                app:layout_constraintVertical_bias="0.050000012" />
 
             <EditText
                 android:id="@+id/plainTextRegistroNombre"
-                android:layout_width="match_parent"
+                android:layout_width="310dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/utecColor"
@@ -81,30 +94,27 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.19" />
+                app:layout_constraintVertical_bias="0.110000014" />
 
             <TextView
                 android:id="@+id/textViewContrasenia"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
                 android:layout_marginLeft="4dp"
-                android:layout_marginTop="10dp"
                 android:text="Contraseña"
                 android:textColor="@color/utecColor"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.14"
+                app:layout_constraintHorizontal_bias="0.06"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.41000003" />
+                app:layout_constraintTop_toBottomOf="@+id/plainTextRegistroNombre"
+                app:layout_constraintVertical_bias="0.04000002" />
 
             <EditText
                 android:id="@+id/plainTextContrasenia"
-                android:layout_width="match_parent"
-                android:layout_height="47dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="280dp"
+                android:layout_height="50dp"
                 android:backgroundTint="@color/utecColor"
                 android:ems="10"
                 android:inputType="textPassword"
@@ -112,61 +122,64 @@
                 android:text=""
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.26"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewContrasenia"
+                app:layout_constraintVertical_bias="0.01999998" />
 
             <TextView
                 android:id="@+id/textViewOlvidasteContrasenia"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginTop="0dp"
+                android:layout_width="321dp"
+                android:layout_height="25dp"
                 android:layout_marginRight="4dp"
                 android:gravity="right"
                 android:text="¿Olvidaste tu contraseña?"
                 android:textColor="@color/utecColor"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.14"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.41000003" />
+                app:layout_constraintVertical_bias="0.52" />
 
             <TextView
                 android:id="@+id/textViewError"
                 android:layout_width="match_parent"
                 android:layout_height="62dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
                 android:textAlignment="center"
                 android:textColor="#FF0000"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:visibility="visible" />
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/buttonLogin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/plainTextContrasenia"
+                app:layout_constraintVertical_bias="1.0" />
 
 
             <Button
                 android:id="@+id/buttonLogin"
                 android:layout_width="160dp"
                 android:layout_height="60dp"
-                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/utecColor"
                 android:text="Ingresar"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:cornerRadius="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.76" />
+                app:layout_constraintVertical_bias="0.85" />
 
             <TextView
                 android:id="@+id/textViewNoTienesCuenta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="¿No tienes cuenta? ¡Registrate!"
@@ -176,9 +189,9 @@
                 app:layout_constraintHorizontal_bias="0.16"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.13" />
+                app:layout_constraintVertical_bias="0.94" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
