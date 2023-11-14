@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragmentLogin">
+    <fragment
+        android:id="@+id/fragmentLogin"
+        android:name="com.example.pft.FragmentLogin"
+        android:label="FragmentLogin" >
+        <action
+            android:id="@+id/action_fragmentLogin_to_fragmentMenuEstudiante2"
+            app:destination="@id/fragmentMenuEstudiante2" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentMenuEstudiante2"
+        android:name="com.example.pft.FragmentMenuEstudiante"
+        android:label="fragment_menu_estudiante"
+        tools:layout="@layout/fragment_menu_estudiante" >
+        <action
+            android:id="@+id/action_fragmentMenuEstudiante2_to_fragmentVerReclamos3"
+            app:destination="@id/fragmentVerReclamos3" />
+        <action
+            android:id="@+id/action_fragmentMenuEstudiante2_to_fragmentLogin"
+            app:destination="@id/fragmentLogin" />
+        <action
+            android:id="@+id/action_fragmentMenuEstudiante2_to_fragmentCrearReclamo2"
+            app:destination="@id/fragmentCrearReclamo2" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentVerReclamos3"
+        android:name="com.example.pft.FragmentVerReclamos"
+        android:label="fragment_ver_reclamos"
+        tools:layout="@layout/fragment_ver_reclamos" >
+        <action
+            android:id="@+id/action_fragmentVerReclamos3_to_fragmentoModificarEliminarReclamo2"
+            app:destination="@id/fragmentoModificarEliminarReclamo2" />
+        <action
+            android:id="@+id/action_fragmentVerReclamos3_to_fragmentMenuEstudiante2"
+            app:destination="@id/fragmentMenuEstudiante2" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentoModificarEliminarReclamo2"
+        android:name="com.example.pft.FragmentoModificarEliminarReclamo"
+        android:label="fragment_modificar_eleminar_reclamo"
+        tools:layout="@layout/fragment_modificar_eleminar_reclamo" >
+        <action
+            android:id="@+id/action_fragmentoModificarEliminarReclamo2_to_fragmentVerReclamos3"
+            app:destination="@id/fragmentVerReclamos3" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentCrearReclamo2"
+        android:name="com.example.pft.FragmentCrearReclamo"
+        android:label="fragment_crear_reclamo"
+        tools:layout="@layout/fragment_crear_reclamo" >
+        <action
+            android:id="@+id/action_fragmentCrearReclamo2_to_fragmentMenuEstudiante2"
+            app:destination="@id/fragmentMenuEstudiante2" />
+    </fragment>
+</navigation>

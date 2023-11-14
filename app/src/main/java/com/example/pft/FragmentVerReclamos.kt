@@ -14,16 +14,19 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.fragment.findNavController
 import com.example.pft.models.ApiClient
 import com.example.pft.models.EstadoSolicitud
 import com.example.pft.models.Evento
 import com.example.pft.models.Reclamo
 import com.example.pft.models.ReclamoCompleto
+import com.exception.main
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class FragmentVerReclamos : Fragment() {
+    private lateinit var rootView: View
     var reclamoSeleccionado : ReclamoCompleto? = null
     var callReclamos: Call<List<ReclamoCompleto>>? = null
     val apiService = ApiClient.apiService
@@ -33,25 +36,31 @@ class FragmentVerReclamos : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         (activity as MainActivity).enableBackButton()
-        cargarReclamos()
-        return inflater.inflate(R.layout.fragment_ver_reclamos, container, false)
+        rootView = inflater.inflate(R.layout.fragment_ver_reclamos, container, false)
+        return rootView
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         volver()
         cargarReclamos()
+
+
     }
 
-    fun volver(){
-        val botonVolver = requireActivity().findViewById<ImageView>(R.id.imageArrowBackVerReclamo)
+    fun volver() {
+        val mainActivity = activity as MainActivity
+        val botonVolver = rootView.findViewById<ImageView>(R.id.imageArrowBackVerReclamo)
         botonVolver.setOnClickListener {
-            requireActivity().onBackPressed()
+
+            if (mainActivity.usuarioLogueado?.tipoUsuario == "ESTUDIANTE"){
+                findNavController().navigate(R.id.action_fragmentVerReclamos3_to_fragmentMenuEstudiante2)
+            }
 
         }
 
     }
 
-    private fun cargarReclamos(){
+    fun cargarReclamos(){
         callReclamos = apiService.getAllReclamos("Bearer "+(activity as MainActivity).tokenJWT)
 
         callReclamos?.enqueue(object : Callback<List<ReclamoCompleto>> {
@@ -71,10 +80,9 @@ class FragmentVerReclamos : Fragment() {
     }
 
     private fun rellenarListaReclamos(lista: List<ReclamoCompleto>){
-        val linealFrameMostrarReclamos =
-            requireActivity().findViewById<LinearLayout>(R.id.linearLayoutVerReclamos)
+
         val mainActivity = activity as MainActivity
-        val listViewReclamos: ListView = requireView().findViewById(R.id.listViewReclamos)
+        val listViewReclamos: ListView = rootView.findViewById(R.id.listViewReclamos)
         val adapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,lista.map { it.titulo })
 
         listViewReclamos.adapter = adapter
@@ -84,18 +92,9 @@ class FragmentVerReclamos : Fragment() {
             mainActivity.reclamoSeleccionado = selectedItem
             reclamoSeleccionado = selectedItem
 
-            cargarVistaModificarElimianarReclamo()
-            linealFrameMostrarReclamos.visibility = View.GONE
+            findNavController().navigate(R.id.action_fragmentVerReclamos3_to_fragmentoModificarEliminarReclamo2)
+
         }
-    }
-    fun cargarVistaModificarElimianarReclamo() {
-
-        val fragmentoModificarEliminarReclamo = FragmentoModificarEliminarReclamo()
-        val fragmentManager = requireActivity().supportFragmentManager
-        val transaction = fragmentManager.beginTransaction()
-        transaction.replace(R.id.fragmentoVerReclamos, fragmentoModificarEliminarReclamo)
-        transaction.addToBackStack(null).commit()
-
     }
 
 

@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.example.pft.models.ApiClient
 import com.example.pft.models.EstadoSolicitud
 import com.example.pft.models.Evento
@@ -25,7 +26,6 @@ import retrofit2.Response
 class FragmentCrearReclamo : Fragment() {
     lateinit var rootView: View
     private var eventoSeleccionado: Evento? = null
-    private var estadoSeleccionado: EstadoSolicitud? = null
     private var semestreSeleccionado: Semestre? = null
     private var tipoSeleccionado: String? = null
 
@@ -35,8 +35,6 @@ class FragmentCrearReclamo : Fragment() {
 
     private var callCreateReclamo: Call<Reclamo>? = null
 
-    private var callEstados: Call<List<EstadoSolicitud>>? = null
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,7 +42,7 @@ class FragmentCrearReclamo : Fragment() {
         (activity as MainActivity).enableBackButton()
         rootView = inflater.inflate(R.layout.fragment_crear_reclamo, container, false)
 
-        return inflater.inflate(R.layout.fragment_crear_reclamo, container, false)
+        return rootView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,7 +50,6 @@ class FragmentCrearReclamo : Fragment() {
         volver()
 
         cargarSpinnerEvento()
-        cargarSpinnerState()
         cargarSpinnerType()
         crearReclamo()
     }
@@ -60,37 +57,36 @@ class FragmentCrearReclamo : Fragment() {
     fun volver() {
         val botonVolver = requireActivity().findViewById<ImageView>(R.id.imageArrowBackCrearReclamo)
         botonVolver.setOnClickListener {
-            requireActivity().onBackPressed()
+            findNavController().navigate(R.id.action_fragmentCrearReclamo2_to_fragmentMenuEstudiante2)
 
         }
 
     }
 
     private fun crearReclamo() {
-        val buttonCrearReclamo = requireView().findViewById<Button>(R.id.buttonCrearReclamoReclamo)
+        val buttonCrearReclamo = rootView.findViewById<Button>(R.id.buttonCrearReclamoReclamo)
         buttonCrearReclamo.setOnClickListener {
             val mainActivity = activity as MainActivity
             var student = mainActivity.usuarioLogueado?.idUsuario?.toLong()
 
             val editTextTitle =
-                requireView().findViewById<EditText>(R.id.editTextCrearReclamoTitulo)
+                rootView.findViewById<EditText>(R.id.editTextCrearReclamoTitulo)
             var textTitle: String? = editTextTitle.text.toString()
 
             val editTextDetail =
-                requireView().findViewById<EditText>(R.id.textLineCrearReclamoDetalle)
+                rootView.findViewById<EditText>(R.id.textLineCrearReclamoDetalle)
             var textDetail: String? = editTextDetail.text.toString()
 
             val reclamo = Reclamo(-1,textTitle,tipoSeleccionado,textDetail,
                 semestreSeleccionado?.idSemestre,
-                estadoSeleccionado?.idEstado,student, eventoSeleccionado?.idEvento
+                -1,student, eventoSeleccionado?.idEvento
             )
             callCreateReclamo = apiService.createReclamo("Bearer "+(activity as MainActivity).tokenJWT,reclamo)
             callCreateReclamo?.enqueue(object : Callback<Reclamo> {
 
                 override fun onResponse(call: Call<Reclamo>, response: Response<Reclamo>) {
-                    println(response)
                     if (response.isSuccessful) {
-                        val mensaje = "Reclamo creado exitosamente " + response.code()
+                        val mensaje = "Reclamo creado exitosamente"
                         Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show()
                     }else if (response.code() == 400){
                         Toast.makeText(requireContext(), response.errorBody()?.string(), Toast.LENGTH_LONG).show()
@@ -108,8 +104,8 @@ class FragmentCrearReclamo : Fragment() {
     }
 
     private fun rellenarSpinnerEvento(lista: List<Evento>) {
-        val labelSemester: TextView = requireView().findViewById(R.id.textViewReclamoSemestre)
-        val spinnerSemester: Spinner = requireView().findViewById(R.id.spinnerCrearReclamoSemestre)
+        val labelSemester: TextView = rootView.findViewById(R.id.textViewReclamoSemestre)
+        val spinnerSemester: Spinner = rootView.findViewById(R.id.spinnerCrearReclamoSemestre)
         val listaConNull = listOf(null) + lista
 
         val adapter = ArrayAdapter(
@@ -118,7 +114,7 @@ class FragmentCrearReclamo : Fragment() {
             listaConNull.map {
                 it?.let { EventoSpinnerItem(it.titulo, it) } ?: "Seleccione un evento"
             })
-        val spinnerEvento: Spinner = requireView().findViewById(R.id.spinnerCrearReclamoEvento)
+        val spinnerEvento: Spinner = rootView.findViewById(R.id.spinnerCrearReclamoEvento)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         spinnerEvento.adapter = adapter
@@ -172,64 +168,6 @@ class FragmentCrearReclamo : Fragment() {
         })
     }
 
-    private fun cargarSpinnerState(){
-        callEstados = apiService.getAllEstados("Bearer "+(activity as MainActivity).tokenJWT)
-
-        callEstados?.enqueue(object : Callback<List<EstadoSolicitud>> {
-            override fun onResponse(call: Call<List<EstadoSolicitud>>, response: Response<List<EstadoSolicitud>>) {
-                println(response)
-                if (response.isSuccessful) {
-                    val states: List<EstadoSolicitud> = response.body() ?: emptyList()
-                    rellenarSpinnerEstado(states)
-                } else {
-                    println("Error trayendo los eventos ${response.code()}")
-                }
-            }
-            override fun onFailure(call: Call<List<EstadoSolicitud>>, t: Throwable) {
-                println(t.message)
-            }
-        })
-    }
-
-    private fun rellenarSpinnerEstado(lista: List<EstadoSolicitud>) {
-        val listaConNull = listOf(null) + lista
-
-        val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            listaConNull.map {
-                it?.let { EstadoSpinnerItem(it.nombre, it) } ?: "Seleccione un estado"
-            })
-        val spinnerEstado: Spinner = requireView().findViewById(R.id.spinnerCrearReclamoEstado)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        spinnerEstado.adapter = adapter
-
-        spinnerEstado.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                val selectedItem = parent?.getItemAtPosition(position)
-                if (selectedItem is EstadoSpinnerItem) {
-                    // Hacer algo con el objeto completo del evento seleccionado
-                    estadoSeleccionado = selectedItem.estado
-
-
-                } else {
-                    // El elemento seleccionado es nulo o "Seleccione un evento," manejarlo según sea necesario
-                    estadoSeleccionado = null
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                estadoSeleccionado = null
-            }
-        }
-    }
-
     private fun cargarSpinnerType(){
         val listaDeTipos = listOf("Seleccione un tipo","EVENTO_VME", "ACTIVIDAD_APE")
 
@@ -279,7 +217,7 @@ class FragmentCrearReclamo : Fragment() {
             listaConNull.map {
                 it?.let { SemestreSpinnerItem(it.nombre, it) } ?: "Seleccione un Semestre"
             })
-        val spinnerSemester: Spinner = requireView().findViewById(R.id.spinnerCrearReclamoSemestre)
+        val spinnerSemester: Spinner = rootView.findViewById(R.id.spinnerCrearReclamoSemestre)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         spinnerSemester.adapter = adapter

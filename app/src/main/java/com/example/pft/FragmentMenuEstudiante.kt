@@ -14,6 +14,7 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.fragment.findNavController
 import com.exception.MyException
 
 class FragmentMenuEstudiante : Fragment() {
@@ -39,22 +40,14 @@ class FragmentMenuEstudiante : Fragment() {
     fun crearReclamo() {
         val buttonCrearReclamos = requireActivity().findViewById<Button>(R.id.buttonCrearReclamo)
         buttonCrearReclamos.setOnClickListener {
-            val fragmentCrearReclamo = FragmentCrearReclamo()
-            val fragmentManager = requireActivity().supportFragmentManager
-            val transaction = fragmentManager.beginTransaction()
-            transaction.replace(R.id.menuLogin, fragmentCrearReclamo)
-            transaction.addToBackStack(null).commit()
+            findNavController().navigate(R.id.action_fragmentMenuEstudiante2_to_fragmentCrearReclamo2)
         }
     }
 
     fun verReclamo() {
         val buttonVerReclamos = requireActivity().findViewById<Button>(R.id.buttonVerReclamo)
         buttonVerReclamos.setOnClickListener {
-            val fragmentVerReclamo = FragmentVerReclamos()
-            val fragmentManager = requireActivity().supportFragmentManager
-            val transaction = fragmentManager.beginTransaction()
-            transaction.replace(R.id.menuLogin, fragmentVerReclamo)
-            transaction.addToBackStack(null).commit()
+            findNavController().navigate(R.id.action_fragmentMenuEstudiante2_to_fragmentVerReclamos3)
         }
     }
 
@@ -143,9 +136,8 @@ class FragmentMenuEstudiante : Fragment() {
             requireActivity().findViewById<Button>(R.id.buttonCancelarMiniFrameAnali)
 
         buttonAceptarMiniFrameEstu.setOnClickListener {
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            Intent.FLAG_ACTIVITY_CLEAR_TOP
-            startActivity(intent)
+            findNavController().navigate(R.id.action_fragmentMenuEstudiante2_to_fragmentLogin)
+            miniFrameCloseEstu.visibility = View.GONE
         }
 
         buttonCancelarMiniFrameEstu.setOnClickListener {

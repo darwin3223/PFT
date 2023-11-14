@@ -17,6 +17,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.example.pft.models.ApiClient
 import com.example.pft.models.Evento
 import com.example.pft.models.Reclamo
@@ -46,12 +48,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        editTextPassword = findViewById(R.id.plainTextContrasenia)
-        imageViewEye = findViewById(R.id.imageViewEyeOpen)
-        buttonlogin()
-        noTienesCuenta()
-        ocultarMensajeError()
-        olvidasteLaContrasenia()
+//        editTextPassword = findViewById(R.id.plainTextContrasenia)
+//        imageViewEye = findViewById(R.id.imageViewEyeOpen)
+//        buttonlogin()
+//        noTienesCuenta()
+//        ocultarMensajeError()
+//        olvidasteLaContrasenia()
     }
     fun togglePasswordVisibility(view: View) {
         if (editTextPassword.transformationMethod == PasswordTransformationMethod.getInstance()) {
@@ -95,67 +97,7 @@ class MainActivity : AppCompatActivity() {
         imageViewLogoUtec.visibility = View.GONE
     }
 
-    fun buttonlogin() {
-        buttonLogin = findViewById<Button>(R.id.buttonLogin)
 
-        buttonLogin.setOnClickListener {
-            sendLoginRequest()
-
-        }
-    }
-
-    @SuppressLint("WrongViewCast")
-    private fun sendLoginRequest() {
-        // text fields
-        val editTextNombreUsuario = findViewById<EditText>(R.id.plainTextRegistroNombre)
-        val editTextContrasenia = findViewById<EditText>(R.id.plainTextContrasenia)
-
-        val nombreUsuario = editTextNombreUsuario.text.toString()
-        val contrasenia = editTextContrasenia.text.toString()
-
-        println("Nombre usuario: $nombreUsuario, contrasenia: $contrasenia")
-
-        val apiService = ApiClient.apiService
-
-        val userLogin = UserLoginRequest(username = nombreUsuario, password = contrasenia)
-        val call = apiService.loginUsuario(userLogin)
-
-        call.enqueue(object : retrofit2.Callback<UserResponse> {
-            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                if (response.isSuccessful) {
-                    tokenJWT = response.body()?.token
-                    usuarioLogueado = response.body()?.usuario
-                    when (response.body()?.usuario?.tipoUsuario) {
-                        "ANALISTA" -> cargarMenuAnalista()
-                        "ESTUDIANTE" -> cargarMenuEstudiante()
-                        "TUTOR" -> cargarMenuAnalista()
-                    }
-
-                } else {
-                    when (response.code()) {
-
-                        404 -> mostrarMensajeError(response.errorBody()?.string())
-                        401 -> mostrarMensajeError(response.errorBody()?.string())
-                        else -> mostrarMensajeError("Error en el servidor intentelo mas tarde")
-                    }
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<UserResponse>, t: Throwable) {
-                println(t.message)
-            }
-        })
-
-    }
-
-    fun cargarMenuEstudiante() {
-        ocultarLogin()
-        val fragmentMenuEstudiante = FragmentMenuEstudiante()
-        val fragmentManager = supportFragmentManager
-        val transaction = fragmentManager.beginTransaction()
-        transaction.replace(R.id.menuLogin, fragmentMenuEstudiante)
-        transaction.addToBackStack(null).commit()
-    }
     fun cargarMenuAnalista() {
         ocultarLogin()
         val fragmentMenuAnalista = FragmentMenuAnalista()
@@ -204,6 +146,24 @@ class MainActivity : AppCompatActivity() {
     fun disableBackButton() {
         backButtonEnabled = false
     }
+
+    fun mostrarFragmento(fragment: FragmentVerReclamos) {
+        // Obtenemos el FragmentManager
+        val fragmentManager: FragmentManager = supportFragmentManager
+
+        // Iniciamos una transacción de fragmento
+        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+
+        // Reemplazamos cualquier fragmento existente en el contenedor con el nuevo fragmento
+        transaction.replace(R.id.fragmentModificarEliminar, fragment)
+
+        // Añadimos la transacción a la pila para poder realizar transacciones hacia atrás
+        transaction.addToBackStack(null)
+
+        // Confirmamos la transacción
+        transaction.commit()
+    }
+
 }
 
 

@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -18,12 +20,17 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.navigation.fragment.findNavController
 import com.example.pft.models.ApiClient
 import com.example.pft.models.EstadoSolicitud
 import com.example.pft.models.Evento
 import com.example.pft.models.Reclamo
+import com.example.pft.models.ReclamoCompleto
 import com.example.pft.models.Semestre
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,13 +39,16 @@ import retrofit2.Response
 class FragmentoModificarEliminarReclamo : Fragment() {
     lateinit var rootView: View
     private var eventoSeleccionado: Evento? = null
-    private var estadoSeleccionado: EstadoSolicitud? = null
     private var semestreSeleccionado: Semestre? = null
     private var tipoSeleccionado: String? = null
 
     private val apiService = ApiClient.apiService
 
     var positionEvento: Int = -1
+
+    var positionSemestre: Int = -1
+
+    var positionTipo: Int = -1
 
     private lateinit var events: List<Evento>
 
@@ -48,9 +58,6 @@ class FragmentoModificarEliminarReclamo : Fragment() {
 
     private var callEventos: Call<List<Evento>>? = null
 
-    private var callEventoId: Call<Evento>? = null
-
-    private var callEstados: Call<List<EstadoSolicitud>>? = null
 //    private var linealFrameMostrarReclamos =
 //        requireActivity().findViewById<LinearLayout>(R.id.linearLayoutVerReclamos)
 
@@ -69,12 +76,17 @@ class FragmentoModificarEliminarReclamo : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
         val mainActivity = activity as MainActivity
+
+
+
+
+
         mainActivity.enableBackButton()
         modificarReclamos()
         eliminarReclamos()
-        cargarSpinnerEvento()
-        cargarSpinnerState()
         cargarSpinnerType()
+        cargarSpinnerEvento()
+        rellenarSpinnerSemester()
 
         val editTextTitle: EditText = view.findViewById(R.id.editTextTextModificarEliminarTitulo)
         editTextTitle.text =
@@ -85,21 +97,55 @@ class FragmentoModificarEliminarReclamo : Fragment() {
             Editable.Factory.getInstance().newEditable(mainActivity.reclamoSeleccionado?.detalle)
 
         setearSpinnerEvento()
+        setearSpinnerType()
 
+//        var isHandlingBackPressed = false
 
+        // Configurar el botón de retroceso del dispositivo utilizando viewLifecycleOwner
+//        val callback = object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                if (!isHandlingBackPressed) {
+//                    isHandlingBackPressed = true
+//
+//                    var fragment = requireView().findViewById<ConstraintLayout>(R.id.fragmentModificarEliminar)
+//                    fragment.visibility = View.INVISIBLE
+//
+//                    val fragmentVerReclamos = FragmentVerReclamos()
+//                    val fragmentManager = requireActivity().supportFragmentManager
+//                    val transaction = fragmentManager.beginTransaction()
+//                    transaction.replace(R.id.fragmentModificarEliminar, fragmentVerReclamos)
+//                    transaction.addToBackStack(null).commit()
+//                    fragmentManager.executePendingTransactions()
+//
+//                    isHandlingBackPressed = false
+//                }
+//            }
+//        }
 
+        // Agregar el callback al dispatcher
+//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+//
+//        // Habilitar o deshabilitar el botón de retroceso del dispositivo según sea necesario
+//        callback.isEnabled = true
+//        volver()
 
-
+        view.isFocusableInTouchMode = true
+        view.requestFocus()
+        view.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                findNavController().navigate(R.id.action_fragmentoModificarEliminarReclamo2_to_fragmentVerReclamos3)
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
         volver()
-
     }
+
     fun volver() {
         var botonVolver =
             requireActivity().findViewById<ImageView>(R.id.imageArrowBackModificarEliminarModificarEliminar)
         botonVolver.setOnClickListener {
-            var linealFrameMostrarReclamos = requireActivity().findViewById<LinearLayout>(R.id.linearLayoutVerReclamos)
-            linealFrameMostrarReclamos.visibility = View.VISIBLE
-            requireActivity().onBackPressed()
+            findNavController().navigate(R.id.action_fragmentoModificarEliminarReclamo2_to_fragmentVerReclamos3)
         }
     }
 
@@ -109,7 +155,6 @@ class FragmentoModificarEliminarReclamo : Fragment() {
             mostrarFrameModificarReclamo()
         }
     }
-    var listaEventos: List<Evento>? = null
     fun setearSpinnerEvento(){
         val mainActivity = activity as MainActivity
         callEventos = apiService.getAllEventos("Bearer "+(activity as MainActivity).tokenJWT)
@@ -124,6 +169,7 @@ class FragmentoModificarEliminarReclamo : Fragment() {
                     var eventoSeleccionado: Evento = mainActivity.reclamoSeleccionado.evento
                     positionEvento = events.indexOf(eventoSeleccionado)
                     spinnerEvento?.setSelection(positionEvento+1)
+                    setearSpinnerSemestre(eventoSeleccionado.listaSemestres)
                 } else {
                     println("Error trayendo los eventos ${response.code()}")
                 }
@@ -134,23 +180,34 @@ class FragmentoModificarEliminarReclamo : Fragment() {
         })
     }
 
+    fun setearSpinnerSemestre(lista: List<Semestre>){
+        val mainActivity = activity as MainActivity
+
+        semestreSeleccionado = mainActivity.reclamoSeleccionado.semestre
+
+        val spinnerSemestre: Spinner? = view?.findViewById(R.id.spinnerModificarEliminarSemestre)
+
+        positionSemestre = lista.indexOf(semestreSeleccionado)
+        spinnerSemestre?.setSelection(positionSemestre+1)
+
+    }
+
+    fun setearSpinnerType(){
+        val listaDeTipos = listOf("Seleccione un tipo","EVENTO_VME", "ACTIVIDAD_APE")
+
+        val mainActivity = activity as MainActivity
+        tipoSeleccionado = mainActivity.reclamoSeleccionado.tipoReclamo
+        val spinnerTipo: Spinner? = view?.findViewById(R.id.spinnerModificarEliminarTipo)
+        positionTipo = listaDeTipos.indexOf(tipoSeleccionado)
+        spinnerTipo?.setSelection(positionTipo)
+    }
+
     fun eliminarReclamos(){
         val buttonEliminarReclamoReclamo = requireView().findViewById<Button>(R.id.buttonEliminarReclamo)
         buttonEliminarReclamoReclamo.setOnClickListener {
             mostrarFrameEliminarReclamo()
         }
     }
-
-//    fun volver2() {
-//        val callback = object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//                linealFrameMostrarReclamos.visibility = View.VISIBLE
-//                // Puedes realizar otras acciones aquí si es necesario
-//            }
-//        }
-//
-//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-//    }
 
     fun mostrarFrameModificarReclamo() {
         val miniFrameModificarReclamo =
@@ -204,7 +261,7 @@ class FragmentoModificarEliminarReclamo : Fragment() {
             val reclamo = Reclamo(
                 mainActivity.reclamoSeleccionado?.idReclamo,textTitle,tipoSeleccionado,textDetail,
                 semestreSeleccionado?.idSemestre,
-                estadoSeleccionado?.idEstado,student, eventoSeleccionado?.idEvento
+                mainActivity.reclamoSeleccionado.estado?.idEstado,student, eventoSeleccionado?.idEvento
             )
 
             callUpdateReclamo = apiService.updateReclamo("Bearer "+(activity as MainActivity).tokenJWT,reclamo)
@@ -286,15 +343,15 @@ class FragmentoModificarEliminarReclamo : Fragment() {
                 if (selectedItem is FragmentCrearReclamo.EventoSpinnerItem) {
                     // Hacer algo con el objeto completo del evento seleccionado
                     eventoSeleccionado = selectedItem.evento
-                    spinnerSemester.visibility = View.VISIBLE
-                    labelSemester.visibility = View.VISIBLE
-                    rellenarSpinnerSemester()
+//                    spinnerSemester.visibility = View.VISIBLE
+//                    labelSemester.visibility = View.VISIBLE
+//                    rellenarSpinnerSemester()
 
                 } else {
                     // El elemento seleccionado es nulo o "Seleccione un evento," manejarlo según sea necesario
                     eventoSeleccionado = null
-                    spinnerSemester.visibility = View.INVISIBLE
-                    labelSemester.visibility = View.INVISIBLE
+//                    spinnerSemester.visibility = View.INVISIBLE
+//                    labelSemester.visibility = View.INVISIBLE
                 }
             }
 
@@ -322,64 +379,6 @@ class FragmentoModificarEliminarReclamo : Fragment() {
                 println(t.message)
             }
         })
-    }
-
-    private fun cargarSpinnerState(){
-        callEstados = apiService.getAllEstados("Bearer "+(activity as MainActivity).tokenJWT)
-
-        callEstados?.enqueue(object : Callback<List<EstadoSolicitud>> {
-            override fun onResponse(call: Call<List<EstadoSolicitud>>, response: Response<List<EstadoSolicitud>>) {
-                println(response)
-                if (response.isSuccessful) {
-                    val states: List<EstadoSolicitud> = response.body() ?: emptyList()
-                    rellenarSpinnerEstado(states)
-                } else {
-                    println("Error trayendo los eventos ${response.code()}")
-                }
-            }
-            override fun onFailure(call: Call<List<EstadoSolicitud>>, t: Throwable) {
-                println(t.message)
-            }
-        })
-    }
-
-    private fun rellenarSpinnerEstado(lista: List<EstadoSolicitud>) {
-        val listaConNull = listOf(null) + lista
-
-        val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            listaConNull.map {
-                it?.let { FragmentCrearReclamo.EstadoSpinnerItem(it.nombre, it) } ?: "Seleccione un estado"
-            })
-        val spinnerEstado: Spinner = requireView().findViewById(R.id.spinnerModificarEliminarEstado)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        spinnerEstado.adapter = adapter
-
-        spinnerEstado.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                val selectedItem = parent?.getItemAtPosition(position)
-                if (selectedItem is FragmentCrearReclamo.EstadoSpinnerItem) {
-                    // Hacer algo con el objeto completo del evento seleccionado
-                    estadoSeleccionado = selectedItem.estado
-
-
-                } else {
-                    // El elemento seleccionado es nulo o "Seleccione un evento," manejarlo según sea necesario
-                    estadoSeleccionado = null
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                estadoSeleccionado = null
-            }
-        }
     }
 
     private fun cargarSpinnerType(){
@@ -423,7 +422,8 @@ class FragmentoModificarEliminarReclamo : Fragment() {
     }
 
     private fun rellenarSpinnerSemester(){
-        val listaConNull = listOf(null) + eventoSeleccionado!!.listaSemestres
+        val mainActivity = activity as MainActivity
+        val listaConNull = listOf(null) + mainActivity.reclamoSeleccionado.evento.listaSemestres
 
         val adapter = ArrayAdapter(
             requireContext(),
@@ -461,4 +461,5 @@ class FragmentoModificarEliminarReclamo : Fragment() {
     }
 
 }
+
 

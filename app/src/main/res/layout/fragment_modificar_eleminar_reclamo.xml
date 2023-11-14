@@ -87,8 +87,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLineModificarEliminarDetalle"
-        app:layout_constraintVertical_bias="0.06999999" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarTipo"
+        app:layout_constraintVertical_bias="0.100000024" />
 
     <Spinner
         android:id="@+id/spinnerModificarEliminarSemestre"
@@ -100,19 +100,7 @@
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarEvento"
-        app:layout_constraintVertical_bias="0.120000005" />
-
-    <Spinner
-        android:id="@+id/spinnerModificarEliminarEstado"
-        android:layout_width="340dp"
-        android:layout_height="50dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarSemestre"
-        app:layout_constraintVertical_bias="0.120000005" />
+        app:layout_constraintVertical_bias="0.16000003" />
 
     <Spinner
         android:id="@+id/spinnerModificarEliminarTipo"
@@ -123,8 +111,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.521"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarEstado"
-        app:layout_constraintVertical_bias="0.120000005" />
+        app:layout_constraintTop_toBottomOf="@+id/textLineModificarEliminarDetalle"
+        app:layout_constraintVertical_bias="0.050000012" />
 
     <TextView
         android:id="@+id/textViewModificarEliminarTitulo"
@@ -154,10 +142,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintHorizontal_bias="0.095"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextModificarEliminarTitulo"
-        app:layout_constraintVertical_bias="0.00999999" />
+        app:layout_constraintVertical_bias="0.018" />
 
     <TextView
         android:id="@+id/textViewModificarEliminarEvento"
@@ -171,7 +159,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.13"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLineModificarEliminarDetalle"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarTipo"
         app:layout_constraintVertical_bias="0.07999998" />
 
     <TextView
@@ -190,21 +178,6 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textViewModificarEliminarEstado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:text="Estado"
-        android:textColor="@color/utecColor"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerModificarEliminarEstado"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.132"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarSemestre"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
         android:id="@+id/textViewModificarEliminarTipoModificarEliminar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -215,9 +188,7 @@
         app:layout_constraintBottom_toTopOf="@+id/spinnerModificarEliminarTipo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerModificarEliminarEstado"
-        app:layout_constraintVertical_bias="0.060000002" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/textLineModificarEliminarDetalle"
