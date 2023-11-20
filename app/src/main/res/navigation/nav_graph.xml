@@ -11,6 +11,12 @@
         <action
             android:id="@+id/action_fragmentLogin_to_fragmentMenuEstudiante2"
             app:destination="@id/fragmentMenuEstudiante2" />
+        <action
+            android:id="@+id/action_fragmentLogin_to_fragmentMenuAnalista"
+            app:destination="@id/fragmentMenuAnalista" />
+        <action
+            android:id="@+id/action_fragmentLogin_to_fragmentMenuTutor"
+            app:destination="@id/fragmentMenuTutor" />
     </fragment>
     <fragment
         android:id="@+id/fragmentMenuEstudiante2"
@@ -38,6 +44,15 @@
         <action
             android:id="@+id/action_fragmentVerReclamos3_to_fragmentMenuEstudiante2"
             app:destination="@id/fragmentMenuEstudiante2" />
+        <action
+            android:id="@+id/action_fragmentVerReclamos3_to_fragmentFiltrar"
+            app:destination="@id/fragmentFiltrar" />
+        <action
+            android:id="@+id/action_fragmentVerReclamos3_to_fragmentMenuAnalista"
+            app:destination="@id/fragmentMenuAnalista" />
+        <action
+            android:id="@+id/action_fragmentVerReclamos3_to_fragmentMenuTutor"
+            app:destination="@id/fragmentMenuTutor" />
     </fragment>
     <fragment
         android:id="@+id/fragmentoModificarEliminarReclamo2"
@@ -56,5 +71,38 @@
         <action
             android:id="@+id/action_fragmentCrearReclamo2_to_fragmentMenuEstudiante2"
             app:destination="@id/fragmentMenuEstudiante2" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentFiltrar"
+        android:name="com.example.pft.FragmentFiltrar"
+        android:label="fragment_filtrar"
+        tools:layout="@layout/fragment_filtrar" >
+        <action
+            android:id="@+id/action_fragmentFiltrar_to_fragmentVerReclamos3"
+            app:destination="@id/fragmentVerReclamos3" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentMenuAnalista"
+        android:name="com.example.pft.FragmentMenuAnalista"
+        android:label="fragment_menu_analista"
+        tools:layout="@layout/fragment_menu_analista" >
+        <action
+            android:id="@+id/action_fragmentMenuAnalista_to_fragmentLogin"
+            app:destination="@id/fragmentLogin" />
+        <action
+            android:id="@+id/action_fragmentMenuAnalista_to_fragmentVerReclamos3"
+            app:destination="@id/fragmentVerReclamos3" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentMenuTutor"
+        android:name="com.example.pft.FragmentMenuTutor"
+        android:label="fragment_menu_tutor"
+        tools:layout="@layout/fragment_menu_tutor" >
+        <action
+            android:id="@+id/action_fragmentMenuTutor_to_fragmentLogin"
+            app:destination="@id/fragmentLogin" />
+        <action
+            android:id="@+id/action_fragmentMenuTutor_to_fragmentVerReclamos3"
+            app:destination="@id/fragmentVerReclamos3" />
     </fragment>
 </navigation>

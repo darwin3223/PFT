@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.fragment.findNavController
 import com.example.pft.models.ApiClient
+import com.example.pft.models.Convocatoria
 import com.example.pft.models.EstadoSolicitud
 import com.example.pft.models.Evento
 import com.example.pft.models.Reclamo
@@ -41,16 +42,18 @@ class FragmentoModificarEliminarReclamo : Fragment() {
     private var eventoSeleccionado: Evento? = null
     private var semestreSeleccionado: Semestre? = null
     private var tipoSeleccionado: String? = null
+    lateinit var mainActivity: MainActivity
 
     private val apiService = ApiClient.apiService
+    var callReclamos: Call<List<ReclamoCompleto>>? = null
+
+    private var callConvocatorias: Call<List<Convocatoria>>? = null
 
     var positionEvento: Int = -1
 
     var positionSemestre: Int = -1
 
     var positionTipo: Int = -1
-
-    private lateinit var events: List<Evento>
 
     private var callDeleteReclamo: Call<Reclamo>? = null
 
@@ -69,17 +72,13 @@ class FragmentoModificarEliminarReclamo : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         (activity as MainActivity).enableBackButton()
+        mainActivity = activity as MainActivity
         return inflater.inflate(R.layout.fragment_modificar_eleminar_reclamo, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-        val mainActivity = activity as MainActivity
-
-
-
-
 
         mainActivity.enableBackButton()
         modificarReclamos()
@@ -98,36 +97,6 @@ class FragmentoModificarEliminarReclamo : Fragment() {
 
         setearSpinnerEvento()
         setearSpinnerType()
-
-//        var isHandlingBackPressed = false
-
-        // Configurar el botón de retroceso del dispositivo utilizando viewLifecycleOwner
-//        val callback = object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//                if (!isHandlingBackPressed) {
-//                    isHandlingBackPressed = true
-//
-//                    var fragment = requireView().findViewById<ConstraintLayout>(R.id.fragmentModificarEliminar)
-//                    fragment.visibility = View.INVISIBLE
-//
-//                    val fragmentVerReclamos = FragmentVerReclamos()
-//                    val fragmentManager = requireActivity().supportFragmentManager
-//                    val transaction = fragmentManager.beginTransaction()
-//                    transaction.replace(R.id.fragmentModificarEliminar, fragmentVerReclamos)
-//                    transaction.addToBackStack(null).commit()
-//                    fragmentManager.executePendingTransactions()
-//
-//                    isHandlingBackPressed = false
-//                }
-//            }
-//        }
-
-        // Agregar el callback al dispatcher
-//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-//
-//        // Habilitar o deshabilitar el botón de retroceso del dispositivo según sea necesario
-//        callback.isEnabled = true
-//        volver()
 
         view.isFocusableInTouchMode = true
         view.requestFocus()
@@ -155,15 +124,40 @@ class FragmentoModificarEliminarReclamo : Fragment() {
             mostrarFrameModificarReclamo()
         }
     }
-    fun setearSpinnerEvento(){
-        val mainActivity = activity as MainActivity
-        callEventos = apiService.getAllEventos("Bearer "+(activity as MainActivity).tokenJWT)
 
-        callEventos?.enqueue(object : Callback<List<Evento>> {
-            override fun onResponse(call: Call<List<Evento>>, response: Response<List<Evento>>) {
-                println(response)
+    fun cargarReclamos(){
+        callReclamos = apiService.getAllReclamos("Bearer "+(activity as MainActivity).tokenJWT)
+
+        callReclamos?.enqueue(object : Callback<List<ReclamoCompleto>> {
+            override fun onResponse(call: Call<List<ReclamoCompleto>>, response: Response<List<ReclamoCompleto>>) {
                 if (response.isSuccessful) {
-                    events = response.body() ?: emptyList()
+                    val reclamos: List<ReclamoCompleto> = response.body() ?: emptyList()
+
+                    mainActivity.listaReclamos = reclamos.toMutableList()
+                    findNavController().navigate(R.id.action_fragmentoModificarEliminarReclamo2_to_fragmentVerReclamos3)
+                } else {
+                    println("Error trayendo los reclamos ${response.code()}")
+                }
+            }
+            override fun onFailure(call: Call<List<ReclamoCompleto>>, t: Throwable) {
+                println(t.message)
+            }
+        })
+    }
+    fun setearSpinnerEvento(){
+        callConvocatorias = apiService.getAllConvocatorias("Bearer "+(activity as MainActivity).tokenJWT)
+
+        callConvocatorias?.enqueue(object : Callback<List<Convocatoria>> {
+            override fun onResponse(call: Call<List<Convocatoria>>, response: Response<List<Convocatoria>>) {
+                if (response.isSuccessful) {
+                    val convocatorias: List<Convocatoria> = response.body() ?: emptyList()
+                    var events: MutableList<Evento> = mutableListOf()
+                    for (convocatoria in convocatorias) {
+                        if (convocatoria.estudiante.idUsuario == mainActivity.usuarioLogueado?.idUsuario){
+                            val evento: Evento = convocatoria.evento
+                            events.add(evento)
+                        }
+                    }
                     val spinnerEvento: Spinner? = view?.findViewById(R.id.spinnerModificarEliminarEvento)
 
                     var eventoSeleccionado: Evento = mainActivity.reclamoSeleccionado.evento
@@ -174,7 +168,7 @@ class FragmentoModificarEliminarReclamo : Fragment() {
                     println("Error trayendo los eventos ${response.code()}")
                 }
             }
-            override fun onFailure(call: Call<List<Evento>>, t: Throwable) {
+            override fun onFailure(call: Call<List<Convocatoria>>, t: Throwable) {
                 println(t.message)
             }
         })
@@ -221,6 +215,8 @@ class FragmentoModificarEliminarReclamo : Fragment() {
 
         buttonAceptarMiniFrameModificarReclamo.setOnClickListener {
             modificarReclamo()
+            cargarReclamos()
+            miniFrameModificarReclamo.visibility = View.GONE
         }
         buttonCancelarMiniFrameCancelarReclamo.setOnClickListener {
             miniFrameModificarReclamo.visibility = View.GONE
@@ -237,7 +233,8 @@ class FragmentoModificarEliminarReclamo : Fragment() {
             requireActivity().findViewById<Button>(R.id.buttonCancelarMiniFrameEliminarReclamo)
 
         buttonAceptarMiniFrameEliminarReclamo.setOnClickListener {
-         deleteReclamo()
+            deleteReclamo()
+            miniFrameEliminarReclamo.visibility = View.GONE
         }
         buttonCancelarMiniFrameCancelarReclamo.setOnClickListener {
             miniFrameEliminarReclamo.visibility = View.GONE
@@ -245,8 +242,6 @@ class FragmentoModificarEliminarReclamo : Fragment() {
     }
 
     private fun modificarReclamo(){
-//        val buttonModificarReclamo = requireView().findViewById<Button>(R.id.buttonModificar)
-//        buttonModificarReclamo.setOnClickListener {
             val mainActivity = activity as MainActivity
             var student = mainActivity.usuarioLogueado?.idUsuario?.toLong()
 
@@ -290,16 +285,14 @@ class FragmentoModificarEliminarReclamo : Fragment() {
     }
 
     private fun deleteReclamo(){
-//        val buttonModificarReclamo = requireView().findViewById<Button>(R.id.buttonEliminarReclamo)
-//
-//        buttonModificarReclamo.setOnClickListener {
             val mainActivity = activity as MainActivity
 
             callDeleteReclamo = apiService.deleteReclamo(mainActivity.reclamoSeleccionado?.idReclamo,"Bearer "+(activity as MainActivity).tokenJWT)
             callDeleteReclamo?.enqueue(object : Callback<Reclamo> {
                 override fun onResponse(call: Call<Reclamo>, response: Response<Reclamo>) {
                     if (response.code() == 200) {
-                        val mensaje = "Baja logica exitosa"
+                        cargarReclamos()
+                        val mensaje = "Baja exitosa"
                         Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show()
                     }else{
                         val errorBody = response.errorBody()?.string()
@@ -341,17 +334,10 @@ class FragmentoModificarEliminarReclamo : Fragment() {
             ) {
                 val selectedItem = parent?.getItemAtPosition(position)
                 if (selectedItem is FragmentCrearReclamo.EventoSpinnerItem) {
-                    // Hacer algo con el objeto completo del evento seleccionado
                     eventoSeleccionado = selectedItem.evento
-//                    spinnerSemester.visibility = View.VISIBLE
-//                    labelSemester.visibility = View.VISIBLE
-//                    rellenarSpinnerSemester()
 
                 } else {
-                    // El elemento seleccionado es nulo o "Seleccione un evento," manejarlo según sea necesario
                     eventoSeleccionado = null
-//                    spinnerSemester.visibility = View.INVISIBLE
-//                    labelSemester.visibility = View.INVISIBLE
                 }
             }
 
@@ -363,19 +349,25 @@ class FragmentoModificarEliminarReclamo : Fragment() {
     }
 
     private fun cargarSpinnerEvento(){
-        callEventos = apiService.getAllEventos("Bearer "+(activity as MainActivity).tokenJWT)
+        callConvocatorias = apiService.getAllConvocatorias("Bearer "+(activity as MainActivity).tokenJWT)
 
-        callEventos?.enqueue(object : Callback<List<Evento>> {
-            override fun onResponse(call: Call<List<Evento>>, response: Response<List<Evento>>) {
-                println(response)
+        callConvocatorias?.enqueue(object : Callback<List<Convocatoria>> {
+            override fun onResponse(call: Call<List<Convocatoria>>, response: Response<List<Convocatoria>>) {
                 if (response.isSuccessful) {
-                    val events: List<Evento> = response.body() ?: emptyList()
+                    val convocatorias: List<Convocatoria> = response.body() ?: emptyList()
+                    var events: MutableList<Evento> = mutableListOf()
+                    for (convocatoria in convocatorias) {
+                        if (convocatoria.estudiante.idUsuario == mainActivity.usuarioLogueado?.idUsuario){
+                            val evento: Evento = convocatoria.evento
+                            events.add(evento)
+                        }
+                    }
                     rellenarSpinnerEvento(events)
                 } else {
                     println("Error trayendo los eventos ${response.code()}")
                 }
             }
-            override fun onFailure(call: Call<List<Evento>>, t: Throwable) {
+            override fun onFailure(call: Call<List<Convocatoria>>, t: Throwable) {
                 println(t.message)
             }
         })

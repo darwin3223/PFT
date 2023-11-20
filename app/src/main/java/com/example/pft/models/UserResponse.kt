@@ -6,7 +6,7 @@ data class UserResponse(
 )
 
 data class Usuario(
-    val idUsuario: Int,
+    val idUsuario: Long,
     val nombre: String,
     val apellido: String,
     val documento: Long,
@@ -43,7 +43,7 @@ data class Departamento(
 )
 
 data class Estudiante(
-    val idUsuario: Int,
+    val idUsuario: Long?,
     val nombre: String,
     val apellido: String,
     val documento: Long,
@@ -62,3 +62,4 @@ data class Estudiante(
     val estadoEstudiante: String,
     val añoIngreso: Int
 )
+

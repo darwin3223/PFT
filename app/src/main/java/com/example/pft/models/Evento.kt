@@ -19,3 +19,8 @@ data class Semestre (
     val idSemestre: Long,
     val nombre: String
 )
+
+data class Convocatoria(
+    val estudiante: Estudiante,
+    val evento: Evento
+)

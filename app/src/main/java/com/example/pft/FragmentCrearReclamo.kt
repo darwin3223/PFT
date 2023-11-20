@@ -15,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.pft.models.ApiClient
+import com.example.pft.models.Convocatoria
 import com.example.pft.models.EstadoSolicitud
 import com.example.pft.models.Evento
 import com.example.pft.models.Reclamo
@@ -28,10 +29,11 @@ class FragmentCrearReclamo : Fragment() {
     private var eventoSeleccionado: Evento? = null
     private var semestreSeleccionado: Semestre? = null
     private var tipoSeleccionado: String? = null
+    lateinit var mainActivity: MainActivity
 
     private val apiService = ApiClient.apiService
 
-    private var callEventos: Call<List<Evento>>? = null
+    private var callConvocatorias: Call<List<Convocatoria>>? = null
 
     private var callCreateReclamo: Call<Reclamo>? = null
 
@@ -40,6 +42,7 @@ class FragmentCrearReclamo : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         (activity as MainActivity).enableBackButton()
+        mainActivity = activity as MainActivity
         rootView = inflater.inflate(R.layout.fragment_crear_reclamo, container, false)
 
         return rootView
@@ -103,66 +106,90 @@ class FragmentCrearReclamo : Fragment() {
         }
     }
 
-    private fun rellenarSpinnerEvento(lista: List<Evento>) {
+    private fun rellenarSpinnerEvento(lista: MutableList<Evento>) {
         val labelSemester: TextView = rootView.findViewById(R.id.textViewReclamoSemestre)
         val spinnerSemester: Spinner = rootView.findViewById(R.id.spinnerCrearReclamoSemestre)
-        val listaConNull = listOf(null) + lista
-
-        val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            listaConNull.map {
-                it?.let { EventoSpinnerItem(it.titulo, it) } ?: "Seleccione un evento"
-            })
         val spinnerEvento: Spinner = rootView.findViewById(R.id.spinnerCrearReclamoEvento)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        spinnerEvento.adapter = adapter
+        if (lista.isEmpty()) {
+            val listaConNull = listOf(null) + lista
+            val emptyListMessage = "Usted no está convocado a ningún evento"
 
-        spinnerEvento.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                val selectedItem = parent?.getItemAtPosition(position)
-                if (selectedItem is EventoSpinnerItem) {
-                    // Hacer algo con el objeto completo del evento seleccionado
-                    eventoSeleccionado = selectedItem.evento
-                    spinnerSemester.visibility = View.VISIBLE
-                    labelSemester.visibility = View.VISIBLE
-                    rellenarSpinnerSemester()
+            val adapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                listaConNull.map {
+                    it?.let { EventoSpinnerItem(it.titulo, it) } ?: emptyListMessage
+                })
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-                } else {
-                    // El elemento seleccionado es nulo o "Seleccione un evento," manejarlo según sea necesario
-                    eventoSeleccionado = null
+            spinnerEvento.adapter = adapter
+            spinnerSemester.visibility = View.INVISIBLE
+            labelSemester.visibility = View.INVISIBLE
+        } else {
+            val listaConNull = listOf(null) + lista
+
+            val adapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                listaConNull.map {
+                    it?.let { EventoSpinnerItem(it.titulo, it) } ?: "Seleccione un evento"
+                })
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+            spinnerEvento.adapter = adapter
+
+            spinnerEvento.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedItem = parent?.getItemAtPosition(position)
+                    if (selectedItem is EventoSpinnerItem) {
+                        eventoSeleccionado = selectedItem.evento
+                        spinnerSemester.visibility = View.VISIBLE
+                        labelSemester.visibility = View.VISIBLE
+                        rellenarSpinnerSemester()
+
+                    } else {
+                        eventoSeleccionado = null
+                        spinnerSemester.visibility = View.INVISIBLE
+                        labelSemester.visibility = View.INVISIBLE
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
                     spinnerSemester.visibility = View.INVISIBLE
                     labelSemester.visibility = View.INVISIBLE
                 }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                spinnerSemester.visibility = View.INVISIBLE
-                labelSemester.visibility = View.INVISIBLE
             }
         }
     }
 
     private fun cargarSpinnerEvento(){
-        callEventos = apiService.getAllEventos("Bearer "+(activity as MainActivity).tokenJWT)
+        callConvocatorias = apiService.getAllConvocatorias("Bearer "+(activity as MainActivity).tokenJWT)
 
-        callEventos?.enqueue(object : Callback<List<Evento>> {
-            override fun onResponse(call: Call<List<Evento>>, response: Response<List<Evento>>) {
+        callConvocatorias?.enqueue(object : Callback<List<Convocatoria>> {
+            override fun onResponse(call: Call<List<Convocatoria>>, response: Response<List<Convocatoria>>) {
                 println(response)
                 if (response.isSuccessful) {
-                    val events: List<Evento> = response.body() ?: emptyList()
+                    val convocatorias: List<Convocatoria> = response.body() ?: emptyList()
+                    var events: MutableList<Evento> = mutableListOf()
+
+                    for (convocatoria in convocatorias) {
+                        if (convocatoria.estudiante.idUsuario == mainActivity.usuarioLogueado?.idUsuario){
+                            val evento: Evento = convocatoria.evento
+                            events.add(evento)
+                        }
+                    }
                     rellenarSpinnerEvento(events)
                 } else {
                     println("Error trayendo los eventos ${response.code()}")
                 }
             }
-            override fun onFailure(call: Call<List<Evento>>, t: Throwable) {
+            override fun onFailure(call: Call<List<Convocatoria>>, t: Throwable) {
                 println(t.message)
             }
         })
@@ -204,8 +231,6 @@ class FragmentCrearReclamo : Fragment() {
                 }
             }
         }
-
-
     }
 
     private fun rellenarSpinnerSemester(){
@@ -247,12 +272,6 @@ class FragmentCrearReclamo : Fragment() {
     }
 
     data class EventoSpinnerItem(val nombre: String, val evento: Evento) {
-        override fun toString(): String {
-            return nombre
-        }
-    }
-
-    data class EstadoSpinnerItem(val nombre: String, val estado: EstadoSolicitud) {
         override fun toString(): String {
             return nombre
         }

@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/layoutCrearReclamoTop"
         android:layout_width="413dp"
-        android:layout_height="55dp"
+        android:layout_height="60dp"
         android:background="@color/utecColor"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -20,7 +20,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <ImageView
-            android:id="@+id/imageArrowBackVerReclamo"
+            android:id="@+id/imageArrowBackVerReclamos"
             android:layout_width="25dp"
             android:layout_height="20dp"
             android:layout_marginLeft="20dp"
@@ -30,11 +30,11 @@
         <TextView
             android:id="@+id/textView"
             android:layout_width="424dp"
-            android:layout_height="26dp"
+            android:layout_height="36dp"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="12dp"
             android:layout_weight="1"
-            android:text="Mis Reclamos"
+            android:text="Reclamos"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -49,11 +49,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutCrearReclamoTop"
-        app:layout_constraintVertical_bias="0.110000014">
+        app:layout_constraintVertical_bias="0.22000003">
 
         <ListView
             android:id="@+id/listViewReclamos"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonFiltros"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filtros"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutVerReclamos"
+        app:layout_constraintVertical_bias="0.8" />
 </androidx.constraintlayout.widget.ConstraintLayout>

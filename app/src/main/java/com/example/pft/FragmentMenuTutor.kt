@@ -1,6 +1,5 @@
 package com.example.pft
 
-
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -23,7 +21,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class FragmentMenuEstudiante : Fragment() {
+class FragmentMenuTutor : Fragment() {
     var callReclamos: Call<List<ReclamoCompleto>>? = null
     val apiService = ApiClient.apiService
     lateinit var mainActivity: MainActivity
@@ -31,37 +29,30 @@ class FragmentMenuEstudiante : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         (activity as MainActivity).enableBackButton()
-        val view = inflater.inflate(R.layout.fragment_menu_estudiante, container, false)
+        mainActivity = activity as MainActivity
+        val view = inflater.inflate(R.layout.fragment_menu_tutor, container, false)
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainActivity = activity as MainActivity
+        val textViewTutor = view.rootView.findViewById<TextView>(R.id.textViewTutor)
+        textViewTutor.text = "Tutor - "+ mainActivity.usuarioLogueado?.nombreUsuario
 
-        val textViewEstudiante = view.rootView.findViewById<TextView>(R.id.textViewTituloEstudiante)
-        textViewEstudiante.text = "Estudiante - "+ mainActivity.usuarioLogueado?.nombreUsuario
         cargarReclamos()
-        crearReclamo()
-        verReclamo()
+        atenderReclamos()
         volver()
+        cerrarSesion()
         facebookUtec()
         instagramUtec()
         xUtec()
-        cerrarSesion()
     }
 
-    fun crearReclamo() {
-        val buttonCrearReclamos = requireActivity().findViewById<Button>(R.id.buttonCrearReclamo)
-        buttonCrearReclamos.setOnClickListener {
-            findNavController().navigate(R.id.action_fragmentMenuEstudiante2_to_fragmentCrearReclamo2)
-        }
-    }
-
-    fun verReclamo() {
-        val buttonVerReclamos = requireActivity().findViewById<Button>(R.id.buttonVerReclamo)
-        buttonVerReclamos.setOnClickListener {
-            findNavController().navigate(R.id.action_fragmentMenuEstudiante2_to_fragmentVerReclamos3)
+    fun atenderReclamos() {
+        val buttonAtenderReclamos =
+            requireActivity().findViewById<Button>(R.id.buttonAtenderReclamos)
+        buttonAtenderReclamos.setOnClickListener {
+            findNavController().navigate(R.id.action_fragmentMenuTutor_to_fragmentVerReclamos3)
         }
     }
 
@@ -86,7 +77,8 @@ class FragmentMenuEstudiante : Fragment() {
 
     fun facebookUtec() {
         try {
-            val facebookUtec = requireActivity().findViewById<ImageView>(R.id.imageViewFacebookUtec)
+            val facebookUtec =
+                requireActivity().findViewById<ImageView>(R.id.imageViewFacebookUtecAnalista)
 
             facebookUtec.setOnClickListener {
                 val urlRedSocial = "https://www.facebook.com/utecuy/?locale=es_LA"
@@ -104,7 +96,7 @@ class FragmentMenuEstudiante : Fragment() {
     fun instagramUtec() {
         try {
             val instagramUtec =
-                requireActivity().findViewById<ImageView>(R.id.imageViewIntagramUtec)
+                requireActivity().findViewById<ImageView>(R.id.imageViewIntagramUtecAnalista)
 
             instagramUtec.setOnClickListener {
 
@@ -123,7 +115,7 @@ class FragmentMenuEstudiante : Fragment() {
 
     fun xUtec() {
         try {
-            val xUtec = requireActivity().findViewById<ImageView>(R.id.imageViewXUtec)
+            val xUtec = requireActivity().findViewById<ImageView>(R.id.imageViewXUtecAnalista)
 
             xUtec.setOnClickListener {
 
@@ -151,32 +143,45 @@ class FragmentMenuEstudiante : Fragment() {
             true
     }
 
+    fun mostrarFrameCerrarSesion() {
+        val miniFrameCloseAnali =
+            requireActivity().findViewById<ConstraintLayout>(R.id.miniFrameCloseAnali)
+        miniFrameCloseAnali.visibility = View.VISIBLE
+
+        val buttonAceptarMiniFrameAnali =
+            requireActivity().findViewById<Button>(R.id.buttonAceptarMiniFrameAnali)
+        val buttonCancelarMiniFrameAnali =
+            requireActivity().findViewById<Button>(R.id.buttonCancelarMiniFrameAnali)
+
+        buttonAceptarMiniFrameAnali.setOnClickListener {
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+        }
+        buttonCancelarMiniFrameAnali.setOnClickListener {
+            miniFrameCloseAnali.visibility = View.GONE
+        }
+    }
+
     fun cerrarSesion() {
         val cerrarSesion = requireActivity().findViewById<ImageView>(R.id.cerrarSesionEstudiante)
         cerrarSesion.setOnClickListener {
-            mostrarFrameCerrarSesion()
+            val miniFrameCloseEstu =
+                requireActivity().findViewById<ConstraintLayout>(R.id.miniFrameCloseAnali)
+            miniFrameCloseEstu.visibility = View.VISIBLE
+
+            val buttonAceptarMiniFrameEstu =
+                requireActivity().findViewById<Button>(R.id.buttonAceptarMiniFrameAnali)
+            val buttonCancelarMiniFrameEstu =
+                requireActivity().findViewById<Button>(R.id.buttonCancelarMiniFrameAnali)
+
+            buttonAceptarMiniFrameEstu.setOnClickListener {
+                findNavController().navigate(R.id.action_fragmentMenuTutor_to_fragmentLogin)
+            }
+
+            buttonCancelarMiniFrameEstu.setOnClickListener {
+                miniFrameCloseEstu.visibility = View.GONE
+            }
         }
     }
-
-    fun mostrarFrameCerrarSesion() {
-        val miniFrameCloseEstu =
-            requireActivity().findViewById<ConstraintLayout>(R.id.miniFrameCloseAnali)
-        miniFrameCloseEstu.visibility = View.VISIBLE
-
-        val buttonAceptarMiniFrameEstu =
-            requireActivity().findViewById<Button>(R.id.buttonAceptarMiniFrameAnali)
-        val buttonCancelarMiniFrameEstu =
-            requireActivity().findViewById<Button>(R.id.buttonCancelarMiniFrameAnali)
-
-        buttonAceptarMiniFrameEstu.setOnClickListener {
-            findNavController().navigate(R.id.action_fragmentMenuEstudiante2_to_fragmentLogin)
-            miniFrameCloseEstu.visibility = View.GONE
-        }
-
-        buttonCancelarMiniFrameEstu.setOnClickListener {
-            miniFrameCloseEstu.visibility = View.GONE
-        }
-    }
-
-
 }

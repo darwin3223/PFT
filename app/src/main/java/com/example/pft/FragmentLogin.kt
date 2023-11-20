@@ -52,6 +52,8 @@ class FragmentLogin : Fragment() {
         rootView = inflater.inflate(R.layout.fragment_login, container, false)
         editTextPassword = rootView.findViewById(R.id.plainTextContrasenia)
         imageViewEye = rootView.findViewById(R.id.imageViewEyeOpen)
+        togglePasswordVisibility()
+
         buttonlogin()
         noTienesCuenta()
         ocultarMensajeError()
@@ -70,16 +72,19 @@ class FragmentLogin : Fragment() {
         return rootView
     }
 
-    fun togglePasswordVisibility(view: View) {
-        if (editTextPassword.transformationMethod == PasswordTransformationMethod.getInstance()) {
-            // Mostrar contraseña
-            editTextPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
-            imageViewEye.setImageResource(R.drawable.ic_eye_open)
-        } else {
-            // Ocultar contraseña
-            editTextPassword.transformationMethod = PasswordTransformationMethod.getInstance()
-            imageViewEye.setImageResource(R.drawable.ic_eye_closed)
+    fun togglePasswordVisibility() {
+        imageViewEye.setOnClickListener(){
+            if (editTextPassword.transformationMethod == PasswordTransformationMethod.getInstance()) {
+                // Mostrar contraseña
+                editTextPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                imageViewEye.setImageResource(R.drawable.ic_eye_open)
+            } else {
+                // Ocultar contraseña
+                editTextPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+                imageViewEye.setImageResource(R.drawable.ic_eye_closed)
+            }
         }
+
     }
     fun noTienesCuenta() {
         val noTienesCuentaButton = rootView.findViewById<TextView>(R.id.textViewNoTienesCuenta)
@@ -144,9 +149,9 @@ class FragmentLogin : Fragment() {
                     mainActivity.tokenJWT = response.body()?.token
                     mainActivity.usuarioLogueado = response.body()?.usuario
                     when (response.body()?.usuario?.tipoUsuario) {
-                        "ANALISTA" -> cargarMenuAnalista()
+                        "ANALISTA" -> findNavController().navigate(R.id.action_fragmentLogin_to_fragmentMenuAnalista)
                         "ESTUDIANTE" -> findNavController().navigate(R.id.action_fragmentLogin_to_fragmentMenuEstudiante2)
-                        "TUTOR" -> cargarMenuAnalista()
+                        "TUTOR" -> findNavController().navigate(R.id.action_fragmentLogin_to_fragmentMenuTutor)
                     }
 
                 } else {

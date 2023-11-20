@@ -10,23 +10,37 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.fragment.findNavController
+import com.example.pft.models.ApiClient
+import com.example.pft.models.ReclamoCompleto
 import com.exception.MyException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FragmentMenuAnalista : Fragment() {
+    var callReclamos: Call<List<ReclamoCompleto>>? = null
+    val apiService = ApiClient.apiService
+    lateinit var mainActivity: MainActivity
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         (activity as MainActivity).enableBackButton()
+        mainActivity = activity as MainActivity
         val view = inflater.inflate(R.layout.fragment_menu_analista, container, false)
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val textViewAnalista = view.rootView.findViewById<TextView>(R.id.textViewAnalista)
+        textViewAnalista.text = "Analista - "+ mainActivity.usuarioLogueado?.nombreUsuario
 
+        cargarReclamos()
         atenderReclamos()
         volver()
         cerrarSesion()
@@ -39,12 +53,27 @@ class FragmentMenuAnalista : Fragment() {
         val buttonAtenderReclamos =
             requireActivity().findViewById<Button>(R.id.buttonAtenderReclamos)
         buttonAtenderReclamos.setOnClickListener {
-            val fragmentAtenderReclamos = FragmentAtenderReclamos()
-            val fragmentManager = requireActivity().supportFragmentManager
-            val transaction = fragmentManager.beginTransaction()
-            transaction.replace(R.id.menuLogin, fragmentAtenderReclamos)
-            transaction.addToBackStack(null).commit()
+            findNavController().navigate(R.id.action_fragmentMenuAnalista_to_fragmentVerReclamos3)
         }
+    }
+
+    fun cargarReclamos(){
+        callReclamos = apiService.getAllReclamos("Bearer "+(activity as MainActivity).tokenJWT)
+
+        callReclamos?.enqueue(object : Callback<List<ReclamoCompleto>> {
+            override fun onResponse(call: Call<List<ReclamoCompleto>>, response: Response<List<ReclamoCompleto>>) {
+                if (response.isSuccessful) {
+                    val reclamos: List<ReclamoCompleto> = response.body() ?: emptyList()
+
+                    mainActivity.listaReclamos = reclamos.toMutableList()
+                } else {
+                    println("Error trayendo los reclamos ${response.code()}")
+                }
+            }
+            override fun onFailure(call: Call<List<ReclamoCompleto>>, t: Throwable) {
+                println(t.message)
+            }
+        })
     }
 
     fun facebookUtec() {
@@ -138,9 +167,6 @@ class FragmentMenuAnalista : Fragment() {
     fun cerrarSesion() {
         val cerrarSesion = requireActivity().findViewById<ImageView>(R.id.cerrarSesionEstudiante)
         cerrarSesion.setOnClickListener {
-            mostrarFrameCerrarSesion()
-        }
-        fun mostrarFrameCerrarSesion() {
             val miniFrameCloseEstu =
                 requireActivity().findViewById<ConstraintLayout>(R.id.miniFrameCloseAnali)
             miniFrameCloseEstu.visibility = View.VISIBLE
@@ -151,9 +177,7 @@ class FragmentMenuAnalista : Fragment() {
                 requireActivity().findViewById<Button>(R.id.buttonCancelarMiniFrameAnali)
 
             buttonAceptarMiniFrameEstu.setOnClickListener {
-                val intent = Intent(requireContext(), MainActivity::class.java)
-                Intent.FLAG_ACTIVITY_CLEAR_TOP
-                startActivity(intent)
+                findNavController().navigate(R.id.action_fragmentMenuAnalista_to_fragmentLogin)
             }
 
             buttonCancelarMiniFrameEstu.setOnClickListener {
