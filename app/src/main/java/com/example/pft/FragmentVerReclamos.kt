@@ -56,7 +56,7 @@ class FragmentVerReclamos : Fragment() {
             val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, emptyListMessage)
             listViewReclamos.adapter = adapter
         } else {
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, reclamosFiltrados.map { it.titulo })
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, reclamosFiltrados.map { it.titulo+" - "+it.estudiante?.nombreUsuario })
             listViewReclamos.adapter = adapter
 
             if (mainActivity.usuarioLogueado?.tipoUsuario == "ESTUDIANTE"){
