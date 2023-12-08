@@ -106,6 +106,31 @@ class FragmentCrearReclamo : Fragment() {
         }
     }
 
+    private fun cargarSpinnerEvento(){
+        callConvocatorias = apiService.getAllConvocatorias("Bearer "+(activity as MainActivity).tokenJWT)
+
+        callConvocatorias?.enqueue(object : Callback<List<Convocatoria>> {
+            override fun onResponse(call: Call<List<Convocatoria>>, response: Response<List<Convocatoria>>) {
+                if (response.isSuccessful) {
+                    val convocatorias: List<Convocatoria> = response.body() ?: emptyList()
+                    var events: MutableList<Evento> = mutableListOf()
+
+                    for (convocatoria in convocatorias) {
+                        if (convocatoria.estudiante.idUsuario == mainActivity.usuarioLogueado?.idUsuario){
+                            val evento: Evento = convocatoria.evento
+                            events.add(evento)
+                        }
+                    }
+                    rellenarSpinnerEvento(events)
+                } else {
+                    println("Error trayendo los eventos ${response.code()}")
+                }
+            }
+            override fun onFailure(call: Call<List<Convocatoria>>, t: Throwable) {
+                println(t.message)
+            }
+        })
+    }
     private fun rellenarSpinnerEvento(lista: MutableList<Evento>) {
         val labelSemester: TextView = rootView.findViewById(R.id.textViewReclamoSemestre)
         val spinnerSemester: Spinner = rootView.findViewById(R.id.spinnerCrearReclamoSemestre)
@@ -166,33 +191,6 @@ class FragmentCrearReclamo : Fragment() {
                 }
             }
         }
-    }
-
-    private fun cargarSpinnerEvento(){
-        callConvocatorias = apiService.getAllConvocatorias("Bearer "+(activity as MainActivity).tokenJWT)
-
-        callConvocatorias?.enqueue(object : Callback<List<Convocatoria>> {
-            override fun onResponse(call: Call<List<Convocatoria>>, response: Response<List<Convocatoria>>) {
-                println(response)
-                if (response.isSuccessful) {
-                    val convocatorias: List<Convocatoria> = response.body() ?: emptyList()
-                    var events: MutableList<Evento> = mutableListOf()
-
-                    for (convocatoria in convocatorias) {
-                        if (convocatoria.estudiante.idUsuario == mainActivity.usuarioLogueado?.idUsuario){
-                            val evento: Evento = convocatoria.evento
-                            events.add(evento)
-                        }
-                    }
-                    rellenarSpinnerEvento(events)
-                } else {
-                    println("Error trayendo los eventos ${response.code()}")
-                }
-            }
-            override fun onFailure(call: Call<List<Convocatoria>>, t: Throwable) {
-                println(t.message)
-            }
-        })
     }
 
     private fun cargarSpinnerType(){
@@ -256,11 +254,9 @@ class FragmentCrearReclamo : Fragment() {
             ) {
                 val selectedItem = parent?.getItemAtPosition(position)
                 if (selectedItem is SemestreSpinnerItem) {
-                    // Hacer algo con el objeto completo del semestre seleccionado
                     semestreSeleccionado = selectedItem.semestre
 
                 } else {
-                    // El elemento seleccionado es nulo o "Seleccione un evento," manejarlo según sea necesario
                     semestreSeleccionado = null
                 }
             }

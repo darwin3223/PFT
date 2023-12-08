@@ -306,7 +306,6 @@ class FragmentoModificarEliminarReclamo : Fragment() {
                 }
 
             })
-//        }
     }
 
     private fun rellenarSpinnerEvento(lista: List<Evento>) {

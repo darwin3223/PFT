@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.KeyEvent
@@ -15,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentManager
@@ -110,24 +112,31 @@ class FragmentLogin : Fragment() {
         }
     }
 
-    fun ocultarLogin() {
-        imageViewLogoUtec = requireActivity().findViewById<ImageView>(R.id.imageViewUtec)
-        cardViewLogin = requireActivity().findViewById<CardView>(R.id.cardViewLogin)
-        cardViewLogin.visibility = View.GONE
-        imageViewLogoUtec.visibility = View.GONE
-    }
-
     fun buttonlogin() {
         buttonLogin = rootView.findViewById<Button>(R.id.buttonLogin)
 
         buttonLogin.setOnClickListener {
-            sendLoginRequest()
+
+            // Mostrar ProgressBar al presionar el botón
+            val progressBar = rootView.findViewById<ProgressBar>(R.id.progressBar)
+            buttonLogin.isEnabled = false
+            buttonLogin.text = ""
+            progressBar.visibility = View.VISIBLE
+
+            sendLoginRequest {
+                Handler().postDelayed({
+                    buttonLogin.isEnabled = true
+                    buttonLogin.text = "Ingresar"
+                    progressBar.visibility = View.GONE
+                }, 2000)
+            }
+
 
         }
     }
 
     @SuppressLint("WrongViewCast")
-    private fun sendLoginRequest() {
+    private fun sendLoginRequest(callback: () -> Unit) {
         // text fields
         val editTextNombreUsuario = requireActivity().findViewById<EditText>(R.id.plainTextRegistroNombre)
         val editTextContrasenia = requireActivity().findViewById<EditText>(R.id.plainTextContrasenia)
@@ -168,16 +177,7 @@ class FragmentLogin : Fragment() {
                 println(t.message)
             }
         })
-
-    }
-    fun cargarMenuAnalista() {
-        ocultarLogin()
-        val fragmentMenuAnalista = FragmentMenuAnalista()
-        val fragmentManager = requireActivity().supportFragmentManager
-        val transaction = fragmentManager.beginTransaction()
-        transaction.replace(R.id.menuLogin, fragmentMenuAnalista)
-        transaction.addToBackStack(null).commit()
-
+        callback.invoke()
     }
     fun mostrarMensajeError(error: String?) {
 

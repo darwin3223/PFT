@@ -120,7 +120,8 @@ class FragmentFiltrar : Fragment() {
         callEstados = apiService.getAllEstados("Bearer "+(activity as MainActivity).tokenJWT)
 
         callEstados?.enqueue(object : Callback<List<EstadoSolicitud>> {
-            override fun onResponse(call: Call<List<EstadoSolicitud>>, response: Response<List<EstadoSolicitud>>) {
+            override fun onResponse(call: Call<List<EstadoSolicitud>>,
+                                    response: Response<List<EstadoSolicitud>>) {
                 if (response.isSuccessful) {
                     val estados: List<EstadoSolicitud> = response.body() ?: emptyList()
                     rellenarSpinnerEstado(estados)

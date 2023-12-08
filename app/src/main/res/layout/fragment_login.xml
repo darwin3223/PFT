@@ -174,6 +174,17 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.85" />
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="27dp"
+                android:layout_height="21dp"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/buttonLogin"
+                app:layout_constraintEnd_toEndOf="@+id/buttonLogin"
+                app:layout_constraintStart_toStartOf="@+id/buttonLogin"
+                app:layout_constraintTop_toBottomOf="@+id/textViewError" />
+
             <TextView
                 android:id="@+id/textViewNoTienesCuenta"
                 android:layout_width="match_parent"
